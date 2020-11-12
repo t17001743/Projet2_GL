@@ -1,29 +1,31 @@
 package Engine;
 
+import java.util.List;
+
 public abstract class DynamicEntity implements Entity {
 
-    private List<double> speed;
-    private List<double> position;
+    private List<Double> speed;
+    private List<Double> position;
     private String fileName;
 
-    public double getSpeedX(){
-
+    public Double getSpeedX(){
+        return this.speed.get(0);
     }
 
-    public double getSpeedY(){
-
+    public Double getSpeedY(){
+        return this.speed.get(1);
     }
 
-    public List<double> getSpeed(){
-
+    public List<Double> getSpeed(){
+        return this.speed;
     }
 
-    public void setSpeedX(double speed){
-
+    public void setSpeedX(Double speed){
+        this.speed.set(0, speed);
     }
 
-    public void setSpeedY(double speed){
-
+    public void setSpeedY(Double speed){
+        this.speed.set(1, speed);
     }
 
 }

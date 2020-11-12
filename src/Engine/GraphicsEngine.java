@@ -5,6 +5,8 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.stage.Stage;
 
+import java.util.List;
+
 public class GraphicsEngine extends Application {
 
     private Scene scene;
@@ -15,7 +17,7 @@ public class GraphicsEngine extends Application {
         this.stage = stage;
     }
 
-    public void drawImage(String fileName, List<double> position){
+    public void drawImage(String fileName, List<Double> position){
 
     }
 

@@ -10,7 +10,7 @@ public class Controller {
 
     private ArrayList<Entity> entities;
     private PhysicsEngine physicsEngine;
-    private EventHandler<> eventHandler;
+    private EventHandler eventHandler;
 
     public Controller(ArrayList<Entity> entities, PhysicsEngine physicsEngine){
 

@@ -1,10 +1,12 @@
 package Engine;
 
+import java.util.List;
+
 public interface Entity {
 
-    public List<double> getPosition();
+    public List<Double> getPosition();
 
-    public void setPosition(List<double> position);
+    public void setPosition(List<Double> position);
 
     public String getImage();
 
