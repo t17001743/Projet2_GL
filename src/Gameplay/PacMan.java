@@ -2,9 +2,27 @@ package Gameplay;
 
 import Engine.DynamicEntity;
 
-public abstract class PacMan extends DynamicEntity {
+import java.util.List;
+
+/*public class PacMan extends DynamicEntity {
 
     public PacMan(){
 
     }
-}
+
+    public List<Double> getPosition(){
+
+    }
+
+    public void setPosition(List<Double> position){
+
+    }
+
+    public String getImage(){
+
+    }
+
+    public void setImage(String fileName){
+
+    }
+}*/

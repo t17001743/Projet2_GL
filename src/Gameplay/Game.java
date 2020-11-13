@@ -1,7 +1,6 @@
 package Gameplay;
 
 import Engine.Entity;
-import Engine.ExternalThread;
 import Engine.GraphicsEngine;
 import Engine.PhysicsEngine;
 import com.sun.prism.Graphics;
@@ -16,7 +15,7 @@ import javafx.stage.Stage;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
-public class Game extends Application {
+public class Game extends Thread {
     /*Canvas canvas;
     GraphicsContext gc;
     Scene theScene;
