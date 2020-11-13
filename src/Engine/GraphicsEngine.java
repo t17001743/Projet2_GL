@@ -18,7 +18,7 @@ import java.util.List;
 public class GraphicsEngine extends Application {
 
     private Scene scene;  //scène existante utilisée pour l'affichage du jeu
-    //private Stage stage;
+    private Stage stage;  //la fenêtre de l'application
     private GraphicsContext context;
 
     //public GraphicsEngine(Stage stage){
@@ -28,32 +28,29 @@ public class GraphicsEngine extends Application {
     public GraphicsEngine() {
     }
 
-    public void drawImage(String fileName, List<Double> position) throws FileNotFoundException{
+    public void drawImage(String fileName, List<Double> position, List<Double> dimensions) throws FileNotFoundException{
         // On crée une instance d’Image contenant le nom de l’image à afficher
         Image image = new Image(new FileInputStream("src/Gameplay/Images/" + fileName));
 
         // On implémente l'image dans un noeud graphique
         ImageView imageView = new ImageView(image);
 
-        //Setting the position of the image
+        //position de l'image dans la scène
         imageView.setX(position.get(0));
         imageView.setY(position.get(1));
 
-        //setting the fit height and width of the image view
-        imageView.setFitHeight(45);
-        imageView.setFitWidth(50);
+        //hauteur et largeur de l'image
+        imageView.setFitHeight(dimensions.get(0));
+        imageView.setFitWidth(dimensions.get(1));
 
-        //Setting the preserve ratio of the image view
+        //ratio de l'image
         imageView.setPreserveRatio(true);
 
-        //Creating a Group object
+        //racine ("noeud graphique") de l'image
         Group root = new Group(imageView);
 
         //Creating a scene object
         scene = new Scene(root, 1200, 800);
-
-        // Implantation du nœud contenant l’image dans la scène existante du jeu
-        //scene.getRoot();
     }
 
     @Override
@@ -62,7 +59,11 @@ public class GraphicsEngine extends Application {
         coordonnees.add(50.0);
         coordonnees.add(25.0);
 
-        drawImage("pacman.png", coordonnees);
+        List<Double> dimensions = new ArrayList<>();
+        dimensions.add(50.0);
+        dimensions.add(50.0);
+
+        drawImage("pacman.png", coordonnees, dimensions);
 
         stage.setTitle("Pac-Man");
         stage.setScene(scene);

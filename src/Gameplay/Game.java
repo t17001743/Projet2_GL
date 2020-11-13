@@ -12,6 +12,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+import java.io.FileNotFoundException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
@@ -68,17 +69,29 @@ public class Game extends Thread {
 
 
 
-    //instancie Pacman, Controller, PhysicsEngine et GraphicsEngine
+    //instancie Pacman et Controller
 
     private ArrayList<Entity> entities;
     private PhysicsEngine physicsEngine;
-    GraphicsEngine graphicsEngine;
+    private GraphicsEngine graphicsEngine;
+    private Stage stage;
 
     public void init(){
 
     }
 
     public void run(){
-
+        //on efface l'ancienne image
+        graphicsEngine.clearFrame();
+        //on ajoute chaque élément à la scène graphique
+        try {
+            for(int i=0; i < entities.size(); i++){
+                graphicsEngine.drawImage(entities.get(i).getImage(), entities.get(i).getPosition(), entities.get(i).getDimensions());
+            }
+            //le moteur affiche la nouvelle image
+            graphicsEngine.start(stage);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 }
