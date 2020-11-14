@@ -2,28 +2,13 @@ package Gameplay;
 
 import Engine.DynamicEntity;
 
-import java.util.List;
+import java.util.*;
 
 public class PacMan extends DynamicEntity {
 
-    DynamicEntity dynamicEntity;
 
-    public PacMan(){
+    public PacMan(List<Double> speed, List<Double> position, List<Double> dimensions, String fileName){
+        super(speed, position, dimensions, fileName);
     }
 
-    public List<Double> getPosition(){
-        return dynamicEntity.getPosition();
-    }
-
-    public void setPosition(List<Double> position){
-        dynamicEntity.setPosition(position);
-    }
-
-    public String getImage(){
-        return dynamicEntity.getImage();
-    }
-
-    public void setImage(String fileName){
-        dynamicEntity.setImage(fileName);
-    }
 }

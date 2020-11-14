@@ -1,16 +1,15 @@
 package Gameplay;
 
-import Engine.Entity;
-import Engine.GraphicsEngine;
-import Engine.PhysicsEngine;
-import Engine.StaticEntity;
+import Engine.*;
 import javafx.stage.Stage;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Game extends Thread {
 
     private ArrayList<Entity> entities;
+    private DynamicEntity character;
     private PhysicsEngine physicsEngine;
     private GraphicsEngine graphicsEngine;
     private Stage stage;
@@ -20,7 +19,18 @@ public class Game extends Thread {
 
     public void init(){
         //création des entités dynamiques
-        PacMan pacman = new PacMan();
+        List<Double> speed = new ArrayList<>();
+        speed.add(0.0);
+        speed.add(0.0);
+        List<Double> position = new ArrayList<>();
+        position.add(600.0);
+        position.add(400.0);
+        List<Double> dimensions = new ArrayList<>();
+        dimensions.add(50.0);
+        dimensions.add(50.0);
+        String fileName = "pacman.png";
+        PacMan pacman = new PacMan(speed, position, dimensions, fileName);
+        this.character = pacman;
         entities.add(pacman);
 
         //création des entités statiques
@@ -33,7 +43,7 @@ public class Game extends Thread {
         graphicsEngine = new GraphicsEngine();
 
         //mouvement des entités
-        Controller controller = new Controller(entities, physicsEngine);
+        Controller controller = new Controller(character, physicsEngine);
         controller.initEventHandler();
     }
 
@@ -49,7 +59,7 @@ public class Game extends Thread {
         //on ajoute chaque élément à la scène graphique
         try {
             for(int i=0; i < entities.size(); i++){
-                graphicsEngine.drawImage(entities.get(i).getImage(), entities.get(i).getPosition(), entities.get(i).getDimensions());
+                graphicsEngine.drawImage(entities.get(i));
                 try {
                     sleep(100);
                 } catch (InterruptedException e) {

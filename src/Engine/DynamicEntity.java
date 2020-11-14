@@ -9,9 +9,6 @@ public abstract class DynamicEntity implements Entity {
     private List<Double> dimensions;  //hauteur * largeur de l'image
     private String fileName;  //nom de l'image à afficher depuis le dossier courant (.jpg, .png)
 
-    public DynamicEntity() {
-    }
-
     public DynamicEntity(List<Double> speed, List<Double> position, List<Double> dimensions, String fileName) {
         this.speed = speed;
         this.position = position;
