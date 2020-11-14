@@ -1,11 +1,14 @@
 package Engine;
 
+import Gameplay.Game;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -19,15 +22,15 @@ public class GraphicsEngine extends Application {
 
     private Scene scene;  //scène existante utilisée pour l'affichage du jeu
     private Stage stage;  //la fenêtre de l'application
-    private GraphicsContext context;
+    private GraphicsContext context;  //pour modifier le canvas
 
-    //public GraphicsEngine(Stage stage){
-      //  this.stage = stage;
-    //}
-
-    public GraphicsEngine() {
-    }
-
+    /**
+     * Ajout d'une image à la scène
+     * @param fileName le nom du fichier de l'image (en .png, .jpg)
+     * @param position les coordonnées de l'image dans la scène
+     * @param dimensions hauteur * largeur de l'image
+     * @throws FileNotFoundException si le programme ne trouve pas le fichier
+     */
     public void drawImage(String fileName, List<Double> position, List<Double> dimensions) throws FileNotFoundException{
         // On crée une instance d’Image contenant le nom de l’image à afficher
         Image image = new Image(new FileInputStream("src/Gameplay/Images/" + fileName));
@@ -49,22 +52,25 @@ public class GraphicsEngine extends Application {
         //racine ("noeud graphique") de l'image
         Group root = new Group(imageView);
 
+        Canvas canvas = new Canvas(512, 512);
+        root.getChildren().add(canvas);
+
         //Creating a scene object
-        scene = new Scene(root, 1200, 800);
+        scene = new Scene(root, 1200, 800, Color.BLACK);
 
-                /*Group root = new Group();
-        this.theScene = new Scene( root );
-        primaryStage.setScene( theScene );
-
-        this.canvas = new Canvas( 512, 512 );
-        root.getChildren().add( canvas );
-
-        this.gc = canvas.getGraphicsContext2D();
-        primaryStage.show();*/
+        context = canvas.getGraphicsContext2D();
     }
 
+    /**
+     * Lancement du thread du moteur graphique
+     * @param stage la fenêtre de l'application
+     * @throws FileNotFoundException si le fichier de l'image n'a pas été trouvé
+     */
     @Override
     public void start(Stage stage) throws FileNotFoundException {
+        Game game = new Game();
+        game.start();
+
         List<Double> coordonnees = new ArrayList<>();
         coordonnees.add(50.0);
         coordonnees.add(25.0);
