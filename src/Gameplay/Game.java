@@ -3,6 +3,7 @@ package Gameplay;
 import Engine.Entity;
 import Engine.GraphicsEngine;
 import Engine.PhysicsEngine;
+import Engine.StaticEntity;
 import com.sun.prism.Graphics;
 import javafx.application.Application;
 import javafx.scene.Group;
@@ -57,10 +58,6 @@ public class Game extends Thread {
         gc.fillOval(x,y,l, h);
     }
 
-    public void clearImage(){
-        gc.clearRect(0,0,512,512 );
-    }
-
     public void background(Color color){
         gc.setFill(color);
         gc.fillRect(0,0,512,512);
@@ -69,18 +66,32 @@ public class Game extends Thread {
 
 
 
-    //instancie Pacman et Controller
-
     private ArrayList<Entity> entities;
     private PhysicsEngine physicsEngine;
     private GraphicsEngine graphicsEngine;
     private Stage stage;
 
     public void init(){
+        //création des entités dynamiques
+        PacMan pacman = new PacMan();
+        entities.add(pacman);
 
+        //création des entités statiques
+        StaticEntity staticEntity;
+
+        //initialisation du moteur physique
+        physicsEngine = new PhysicsEngine();
+
+        //initialisation du moteur graphique
+        graphicsEngine = new GraphicsEngine();
+
+        //mouvement des entités
+        Controller controller = new Controller(entities, physicsEngine);
+        controller.initEventHandler();
     }
 
     public void run(){
+        //init();
         //on efface l'ancienne image
         graphicsEngine.clearFrame();
         //on ajoute chaque élément à la scène graphique
@@ -94,4 +105,9 @@ public class Game extends Thread {
             e.printStackTrace();
         }
     }
+
+    public static void main(String args[]) {
+        (new Thread(new Game())).start();
+    }
+
 }

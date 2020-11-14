@@ -4,7 +4,7 @@ import java.util.List;
 
 public abstract class DynamicEntity implements Entity {
 
-    private List<Double> speed;
+    private List<Double> speed;  //vitesse de l'entité
     private List<Double> position;  //coordonnées de l'image
     private List<Double> dimensions;  //hauteur * largeur de l'image
     private String fileName;  //nom de l'image à afficher depuis le dossier courant (.jpg, .png)
@@ -12,9 +12,10 @@ public abstract class DynamicEntity implements Entity {
     public DynamicEntity() {
     }
 
-    public DynamicEntity(List<Double> speed, List<Double> position, String fileName) {
+    public DynamicEntity(List<Double> speed, List<Double> position, List<Double> dimensions, String fileName) {
         this.speed = speed;
         this.position = position;
+        this.dimensions = dimensions;
         this.fileName = fileName;
     }
 

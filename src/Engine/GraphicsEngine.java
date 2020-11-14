@@ -51,6 +51,16 @@ public class GraphicsEngine extends Application {
 
         //Creating a scene object
         scene = new Scene(root, 1200, 800);
+
+                /*Group root = new Group();
+        this.theScene = new Scene( root );
+        primaryStage.setScene( theScene );
+
+        this.canvas = new Canvas( 512, 512 );
+        root.getChildren().add( canvas );
+
+        this.gc = canvas.getGraphicsContext2D();
+        primaryStage.show();*/
     }
 
     @Override
