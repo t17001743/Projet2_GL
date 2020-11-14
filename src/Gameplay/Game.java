@@ -14,7 +14,10 @@ public class Game extends Thread {
     private GraphicsEngine graphicsEngine;
     private Stage stage;
 
-    public Game() {
+    public Game(GraphicsEngine graphicsEngine) {
+        entities = new ArrayList<Entity>();
+        this.graphicsEngine = graphicsEngine;
+
     }
 
     public void init(){
@@ -32,15 +35,11 @@ public class Game extends Thread {
         PacMan pacman = new PacMan(speed, position, dimensions, fileName);
         this.character = pacman;
         entities.add(pacman);
-
         //création des entités statiques
         StaticEntity staticEntity;
 
         //initialisation du moteur physique
         physicsEngine = new PhysicsEngine();
-
-        //initialisation du moteur graphique
-        graphicsEngine = new GraphicsEngine();
 
         //mouvement des entités
         Controller controller = new Controller(character, physicsEngine);
@@ -54,12 +53,16 @@ public class Game extends Thread {
             e.printStackTrace();
         }
         init();
+        System.out.println("Initialisation effectuée");
         //on efface l'ancienne image
         graphicsEngine.clearFrame();
+        System.out.println("Frame cleared");
         //on ajoute chaque élément à la scène graphique
         try {
             for(int i=0; i < entities.size(); i++){
+                System.out.println(entities.get(i));
                 graphicsEngine.drawImage(entities.get(i));
+                System.out.println("image affichée");
                 try {
                     sleep(100);
                 } catch (InterruptedException e) {

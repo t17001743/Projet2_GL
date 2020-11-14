@@ -67,16 +67,13 @@ public class GraphicsEngine extends Application {
      */
     @Override
     public void start(Stage stage) throws FileNotFoundException {
-        Game game = new Game();
+        Game game = new Game(this);
+        Group root = new Group();
+        scene = new Scene(root, 1200, 800, Color.BLACK);
+        Canvas canvas = new Canvas(512, 512);
+
+        context = canvas.getGraphicsContext2D();
         game.start();
-
-        List<Double> coordonnees = new ArrayList<>();
-        coordonnees.add(50.0);
-        coordonnees.add(25.0);
-
-        List<Double> dimensions = new ArrayList<>();
-        dimensions.add(50.0);
-        dimensions.add(50.0);
 
 
         stage.setTitle("Pac-Man");
@@ -89,14 +86,16 @@ public class GraphicsEngine extends Application {
      * Effacement de l'ancienne image
      */
     public void clearFrame(){
+        System.out.println("start clearing");
         context.clearRect(0, 0, scene.getWidth(), scene.getHeight());
+        System.out.println("end clearing");
     }
 
     /**
      * Programme principal
      * @param args
      */
-    public static void main(String args[]){
+    public static void main(String[] args){
         launch(args);
     }
 }
