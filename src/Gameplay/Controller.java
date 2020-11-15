@@ -1,58 +1,61 @@
 package Gameplay;
 
 import Engine.DynamicEntity;
-import Engine.Entity;
 import Engine.PhysicsEngine;
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyEvent;
 
-import java.util.ArrayList;
-
+/**
+ * Ecoute des événements du clavier pour les mouvements des entités du jeu
+ */
 public class Controller {
 
-    private ArrayList<DynamicEntity> entities;
+    private DynamicEntity entity;
     private PhysicsEngine physicsEngine;
     private EventHandler<KeyEvent> eventHandler;
 
-    public Controller(ArrayList<Entity> entities, PhysicsEngine physicsEngine){
-
+    public Controller(DynamicEntity entity, PhysicsEngine physicsEngine){
+        this.entity = entity;
+        this.physicsEngine = physicsEngine;
     }
 
+    /**
+     * Gestion des événements haut/bas/gauche/droite sur les flèches du clavier par l'utilisateur
+     */
     public void initEventHandler(){
-        for(DynamicEntity entity : entities){
-            eventHandler = new EventHandler<KeyEvent>() {
-                @Override
-                public void handle(KeyEvent event) {
-                    switch(event.getCode()){
-                        //flèche du haut
-                        case UP:
-                            physicsEngine.setSpeedX(0, entity);
-                            physicsEngine.setSpeedY(-1, entity);
-                            physicsEngine.updateCoordinates(entity);
+        this.eventHandler = new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                switch(event.getCode()){
+                    //flèche du haut
+                    case UP:
+                        physicsEngine.setSpeedX(0, entity);
+                        physicsEngine.setSpeedY(-1, entity);
+                        physicsEngine.updateCoordinates(entity);
                         break;
-                        //flèche du bas
-                        case DOWN:
-                            physicsEngine.setSpeedX(0, entity);
-                            physicsEngine.setSpeedY(1, entity);
-                            physicsEngine.updateCoordinates(entity);
+                    //flèche du bas
+                    case DOWN:
+                        physicsEngine.setSpeedX(0, entity);
+                        physicsEngine.setSpeedY(1, entity);
+                        physicsEngine.updateCoordinates(entity);
                         break;
-                        //flèche de gauche
-                        case LEFT:
-                            physicsEngine.setSpeedX(-1, entity);
-                            physicsEngine.setSpeedY(0, entity);
-                            physicsEngine.updateCoordinates(entity);
+                    //flèche de gauche
+                    case LEFT:
+                        physicsEngine.setSpeedX(-1, entity);
+                        physicsEngine.setSpeedY(0, entity);
+                        physicsEngine.updateCoordinates(entity);
                         break;
-                        //flèche de droite
-                        case RIGHT:
-                            physicsEngine.setSpeedX(1, entity);
-                            physicsEngine.setSpeedY(0, entity);
-                            physicsEngine.updateCoordinates(entity);
+                    //flèche de droite
+                    case RIGHT:
+                        physicsEngine.setSpeedX(1, entity);
+                        physicsEngine.setSpeedY(0, entity);
+                        physicsEngine.updateCoordinates(entity);
                         break;
-                        default : break;
-                    }
-                    event.consume();
+                    default : break;
                 }
-            };
-        }
+                event.consume();
+            }
+
+        };
     }
 }

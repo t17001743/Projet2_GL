@@ -1,5 +1,8 @@
 package Engine;
 
+/**
+ * Moteur physique
+ */
 public class PhysicsEngine {
 
     /**

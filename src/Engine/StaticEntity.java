@@ -2,6 +2,9 @@ package Engine;
 
 import java.util.List;
 
+/**
+ * Entités qui ne bougent pas (par exemple : murs du labyrinthe)
+ */
 public abstract class StaticEntity implements Entity {
 
     private List<Double> position;  //coordonnées de l'image
