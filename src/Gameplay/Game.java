@@ -3,6 +3,7 @@ package Gameplay;
 import Engine.*;
 import Engine.Graphics.DrawGraphics2D;
 import Engine.Physics.PhysicsEngine;
+import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -25,29 +26,22 @@ public class Game extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        System.out.println("start()");
 
-        /*
-        this.setStage(primaryStage);
-        create2DWindow("Pac-Man", 500, 500);
-         */
+        AnimationTimer animationTimer = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                mainLoop();
+            }
+        };
+
+        System.out.println("start()");
 
         this.physicsEngine = new PhysicsEngine();
 
         this.graphicsEngine = new DrawGraphics2D(primaryStage);
         this.graphicsEngine.create2DWindow("Pac-Man", 500, 500);
 
-
-        this.graphicsEngine.drawBackground(Color.BLACK);
-
-        try {
-            this.graphicsEngine.drawEntity(entities.get(0));
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        mainLoop();
+        animationTimer.start();
     }
 
     /**
@@ -102,32 +96,22 @@ public class Game extends Application {
 
         System.out.println("RUN()" + graphicsEngine);
 
-        while (true) {
+        graphicsEngine.clearFrame();//on efface l'ancienne image
 
-            graphicsEngine.clearFrame();//on efface l'ancienne image
+        graphicsEngine.drawBackground(Color.BLACK);
 
-            graphicsEngine.drawBackground(Color.BLACK);
+        for (int i = 0; i < entities.size(); i++) {
 
-            for (int i = 0; i < entities.size(); i++) {
-
-                if (entities.get(i).getClass().getSuperclass() == DynamicEntity.class)
-                    physicsEngine.updateCoordinates((DynamicEntity) entities.get(i));
-
-                try {
-                    graphicsEngine.drawEntity(entities.get(i));
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-            }
+            if (entities.get(i).getClass().getSuperclass() == DynamicEntity.class)
+                physicsEngine.updateCoordinates((DynamicEntity) entities.get(i));
 
             try {
-                sleep(100);
-            } catch (InterruptedException e) {
+                graphicsEngine.drawEntity(entities.get(i));
+            } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
         }
 
-        //mainLoop();
     }
 
 
