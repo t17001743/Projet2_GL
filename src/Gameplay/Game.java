@@ -22,6 +22,8 @@ public class Game extends CoreApplication {
     private ArrayList<Entity> entities;  // La liste des entités du jeu, à la fois statique et dynamique
     private PhysicsEngine physicsEngine;  // Moteur physique
     private GraphicsEngine graphicsEngine;  // Moteur graphique
+    private int width;
+    private int height;
 
     /**
      * Méthode nécessaire pour le lancement du programme
@@ -38,11 +40,14 @@ public class Game extends CoreApplication {
      * et avant la méthode start() !
      */
     public void init() {
+        width = 500;
+        height = 500;
+
         // Création de la liste d'entités
         entities = new ArrayList<Entity>();
 
         // Création des entités dynamiques et de leurs caractéristiques (vitesse, position dans la scène, dimensions)
-        createEntity(0.0, 0.0, 100.0, 100.0, 50.0, 50.0, "src/Gameplay/Images/pacman.png", PacMan.class);
+        createEntity(0, 0, 100, 100, 50, 50, "src/Gameplay/Images/pacman.png", PacMan.class);
 
     }
 
@@ -67,7 +72,7 @@ public class Game extends CoreApplication {
         this.graphicsEngine = new GraphicsEngine(primaryStage);
 
         // Création de la fenêtre de jeu
-        this.graphicsEngine.create2DWindow("Pac-Man", 500, 500);
+        this.graphicsEngine.create2DWindow("Pac-Man", width, height);
 
         // Instancie la classe des événements sur les entités créés
         Controller controller = new Controller((DynamicEntity) entities.get(0), physicsEngine);
@@ -118,16 +123,16 @@ public class Game extends CoreApplication {
      * @param dimensionY Dimension en y
      * @param entityClass Le class correspondant au type d'entité créé
      */
-    private void createEntity(Double speedX, Double speedY, Double positionX, Double positionY, Double dimensionX, Double dimensionY, String fileName, Object entityClass) {
-        List<Double> speed = new ArrayList<>();
+    private void createEntity(Integer speedX, Integer speedY, Integer positionX, Integer positionY, Integer dimensionX, Integer dimensionY, String fileName, Object entityClass) {
+        List<Integer> speed = new ArrayList<>();
         speed.add(speedX);
         speed.add(speedY);
 
-        List<Double> position = new ArrayList<>();
+        List<Integer> position = new ArrayList<>();
         position.add(positionX);
         position.add(positionY);
 
-        List<Double> dimensions = new ArrayList<>();
+        List<Integer> dimensions = new ArrayList<>();
         dimensions.add(dimensionX);
         dimensions.add(dimensionY);
 

@@ -16,14 +16,14 @@ public class PhysicsEngine {
      * @param speed vitesse de l'entité qui se déplace
      * @param entity l'entité dynamique
      */
-    public void setSpeedX(double speed, DynamicEntity entity){ entity.setSpeedX(speed); }
+    public void setSpeedX(Integer speed, DynamicEntity entity){ entity.setSpeedX(speed); }
 
     /**
      * Mise à jour de la vitesse sur l'axe des ordonnées
      * @param speed vitesse de l'entité qui se déplace
      * @param entity l'entité dynamique
      */
-    public void setSpeedY(double speed, DynamicEntity entity){ entity.setSpeedY(speed); }
+    public void setSpeedY(Integer speed, DynamicEntity entity){ entity.setSpeedY(speed); }
 
     /**
      * Mise à jour des coordonnées de l'entité dynamique grâce aux données liées à sa vitesse

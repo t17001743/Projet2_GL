@@ -9,21 +9,21 @@ import java.util.List;
  */
 public abstract class StaticEntity implements Entity {
 
-    private List<Double> position;  //coordonnées de l'image
-    private List<Double> dimensions;  //hauteur * largeur de l'image
+    private List<Integer> position;  //coordonnées de l'image
+    private List<Integer> dimensions;  //hauteur * largeur de l'image
     private String fileName;  //nom de l'image à afficher depuis le dossier courant (.jpg, .png)
 
-    public StaticEntity(List<Double> position, List<Double> dimensions, String fileName) {
+    public StaticEntity(List<Integer> position, List<Integer> dimensions, String fileName) {
         this.position = position;
         this.dimensions = dimensions;
         this.fileName = fileName;
     }
 
-    public List<Double> getPosition(){
+    public List<Integer> getPosition(){
         return this.position;
     }
 
-    public void setPosition(List<Double> position){
+    public void setPosition(List<Integer> position){
         this.position = position;
     }
 
@@ -35,11 +35,11 @@ public abstract class StaticEntity implements Entity {
         this.fileName = fileName;
     }
 
-    public List<Double> getDimensions() {
+    public List<Integer> getDimensions() {
         return dimensions;
     }
 
-    public void setDimensions(List<Double> dimensions) {
+    public void setDimensions(List<Integer> dimensions) {
         this.dimensions = dimensions;
     }
 

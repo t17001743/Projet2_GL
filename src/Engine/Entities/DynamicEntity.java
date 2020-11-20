@@ -8,12 +8,12 @@ import java.util.List;
  */
 public abstract class DynamicEntity implements Entity {
 
-    private List<Double> speed;  //vitesse de l'entité
-    private List<Double> position;  //coordonnées de l'image
-    private List<Double> dimensions;  //hauteur * largeur de l'image
+    private List<Integer> speed;  //vitesse de l'entité
+    private List<Integer> position;  //coordonnées de l'image
+    private List<Integer> dimensions;  //hauteur * largeur de l'image
     private String fileName;  //nom de l'image à afficher depuis le dossier courant (.jpg, .png)
 
-    public DynamicEntity(List<Double> speed, List<Double> position, List<Double> dimensions, String fileName) {
+    public DynamicEntity(List<Integer> speed, List<Integer> position, List<Integer> dimensions, String fileName) {
         this.speed = speed;
         this.position = position;
         this.dimensions = dimensions;
@@ -21,13 +21,13 @@ public abstract class DynamicEntity implements Entity {
     }
 
     public DynamicEntity(){
-        LinkedList<Double> speed = new LinkedList<>();
-        speed.add(0.0);
-        speed.add(0.0);
+        LinkedList<Integer> speed = new LinkedList<>();
+        speed.add(0);
+        speed.add(0);
 
-        LinkedList<Double> pos = new LinkedList<>();
-        speed.add(100.0);
-        speed.add(100.0);
+        LinkedList<Integer> pos = new LinkedList<>();
+        speed.add(100);
+        speed.add(100);
 
         this.speed = speed;
         this.position = pos;
@@ -38,21 +38,21 @@ public abstract class DynamicEntity implements Entity {
     /**
      * @return la vitesse de l'entité sur l'axe des abscisses
      */
-    public double getSpeedX(){
+    public Integer getSpeedX(){
         return this.speed.get(0);
     }
 
     /**
      * @return la vitesse de l'entité sur l'axe des ordonnées
      */
-    public double getSpeedY(){
+    public Integer getSpeedY(){
         return this.speed.get(1);
     }
 
     /**
      * @return la vitesse de l'entité sur les deux axes (x, y)
      */
-    public List<Double> getSpeed(){
+    public List<Integer> getSpeed(){
         return this.speed;
     }
 
@@ -60,7 +60,7 @@ public abstract class DynamicEntity implements Entity {
      * Changer la vitesse de l'entité sur l'axe des abscisses
      * @param speed vitesse de l'entité
      */
-    public void setSpeedX(Double speed){
+    public void setSpeedX(Integer speed){
         this.speed.set(0, speed);
     }
 
@@ -68,15 +68,15 @@ public abstract class DynamicEntity implements Entity {
      * Changer la vitesse de l'entité sur l'axe des ordonnées
      * @param speed vitesse de l'entité
      */
-    public void setSpeedY(Double speed){
+    public void setSpeedY(Integer speed){
         this.speed.set(1, speed);
     }
 
-    public List<Double> getPosition(){
+    public List<Integer> getPosition(){
         return this.position;
     }
 
-    public void setPosition(List<Double> position){
+    public void setPosition(List<Integer> position){
         this.position = position;
     }
 
@@ -88,11 +88,11 @@ public abstract class DynamicEntity implements Entity {
         this.fileName = fileName;
     }
 
-    public List<Double> getDimensions() {
+    public List<Integer> getDimensions() {
         return dimensions;
     }
 
-    public void setDimensions(List<Double> dimensions) {
+    public void setDimensions(List<Integer> dimensions) {
         this.dimensions = dimensions;
     }
 

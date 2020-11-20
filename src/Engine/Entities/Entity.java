@@ -10,13 +10,13 @@ public interface Entity {
     /**
      * @return la position de l'entité (une liste de coordonnées (x,y))
      */
-    public List<Double> getPosition();
+    public List<Integer> getPosition();
 
     /**
      * Changer la position de l'entité
      * @param position les nouvelles coordonnées de l'entité
      */
-    public void setPosition(List<Double> position);
+    public void setPosition(List<Integer> position);
 
     /**
      * @return l'image représentant l'entité
@@ -32,11 +32,11 @@ public interface Entity {
     /**
      * @return les dimensions hauteur * largeur de l'image
      */
-    public List<Double> getDimensions();
+    public List<Integer> getDimensions();
 
     /**
      * Changer les dimensions de l'image
      * @param dimensions les dimensions hauteur * largeur de l'image
      */
-    public void setDimensions(List<Double> dimensions);
+    public void setDimensions(List<Integer> dimensions);
 }
