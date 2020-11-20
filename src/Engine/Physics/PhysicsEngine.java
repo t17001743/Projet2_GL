@@ -21,12 +21,7 @@ public class PhysicsEngine {
         // Initialisation du tableau des collisions comme en étant vide partout
         for(int i = 0; i < width; i++) {
             for(int j = 0; j < height; j++) {
-                if(i == 0 || j == 0 || i == width - 1 || j == height - 1) {
-                    collisionArray[i][j] = new Pair(true, null);
-                }
-                else {
-                    collisionArray[i][j] = new Pair(false, null);
-                }
+                collisionArray[i][j] = new Pair(false, null);
             }
         }
 
