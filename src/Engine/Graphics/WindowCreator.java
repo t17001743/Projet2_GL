@@ -1,4 +1,4 @@
-package Engine;
+package Engine.Graphics;
 
 import javafx.application.Application;
 import javafx.scene.Group;

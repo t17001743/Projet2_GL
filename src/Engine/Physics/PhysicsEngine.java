@@ -1,6 +1,6 @@
 package Engine.Physics;
 
-import Engine.DynamicEntity;
+import Engine.Entities.DynamicEntity;
 
 import java.util.ArrayList;
 import java.util.List;

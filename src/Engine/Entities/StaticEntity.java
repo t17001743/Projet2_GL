@@ -1,4 +1,6 @@
-package Engine;
+package Engine.Entities;
+
+import Engine.Entities.Entity;
 
 import java.util.List;
 

@@ -1,6 +1,6 @@
 package Gameplay;
 
-import Engine.DynamicEntity;
+import Engine.Entities.DynamicEntity;
 import Engine.Physics.PhysicsEngine;
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyEvent;

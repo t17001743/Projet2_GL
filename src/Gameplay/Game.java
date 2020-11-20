@@ -1,8 +1,11 @@
 package Gameplay;
 
 import Engine.*;
+import Engine.Entities.DynamicEntity;
+import Engine.Entities.Entity;
 import Engine.Graphics.GraphicsEngine;
 import Engine.Physics.PhysicsEngine;
+import Gameplay.Entities.PacMan;
 import javafx.animation.AnimationTimer;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;

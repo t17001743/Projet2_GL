@@ -1,7 +1,6 @@
 package Engine.Graphics;
 
-import Engine.Entity;
-import Engine.WindowCreator;
+import Engine.Entities.Entity;
 import javafx.scene.Scene;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
