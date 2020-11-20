@@ -1,5 +1,6 @@
 package Engine;
 
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -17,6 +18,21 @@ public abstract class DynamicEntity implements Entity {
         this.position = position;
         this.dimensions = dimensions;
         this.fileName = fileName;
+    }
+
+    public DynamicEntity(){
+        LinkedList<Double> speed = new LinkedList<>();
+        speed.add(0.0);
+        speed.add(0.0);
+
+        LinkedList<Double> pos = new LinkedList<>();
+        speed.add(100.0);
+        speed.add(100.0);
+
+        this.speed = speed;
+        this.position = pos;
+        this.dimensions = null;
+        fileName = null;
     }
 
     /**

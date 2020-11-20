@@ -1,7 +1,7 @@
 package Gameplay;
 
 import Engine.DynamicEntity;
-import Engine.PhysicsEngine;
+import Engine.Physics.PhysicsEngine;
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyEvent;
 
@@ -10,6 +10,7 @@ import javafx.scene.input.KeyEvent;
  */
 public class Controller {
 
+    //Pac-Man indice 0
     private DynamicEntity entity;
     private PhysicsEngine physicsEngine;
     private EventHandler<KeyEvent> eventHandler;
@@ -17,6 +18,7 @@ public class Controller {
     public Controller(DynamicEntity entity, PhysicsEngine physicsEngine){
         this.entity = entity;
         this.physicsEngine = physicsEngine;
+        initEventHandler();
     }
 
     /**
@@ -30,32 +32,35 @@ public class Controller {
                     //flèche du haut
                     case UP:
                         physicsEngine.setSpeedX(0, entity);
-                        physicsEngine.setSpeedY(-1, entity);
-                        physicsEngine.updateCoordinates(entity);
+                        physicsEngine.setSpeedY(-1, (DynamicEntity) entity);
+                        physicsEngine.updateCoordinates((DynamicEntity) entity);
                         break;
                     //flèche du bas
                     case DOWN:
-                        physicsEngine.setSpeedX(0, entity);
-                        physicsEngine.setSpeedY(1, entity);
-                        physicsEngine.updateCoordinates(entity);
+                        physicsEngine.setSpeedX(0, (DynamicEntity) entity);
+                        physicsEngine.setSpeedY(1, (DynamicEntity) entity);
+                        physicsEngine.updateCoordinates((DynamicEntity) entity);
                         break;
                     //flèche de gauche
                     case LEFT:
-                        physicsEngine.setSpeedX(-1, entity);
-                        physicsEngine.setSpeedY(0, entity);
-                        physicsEngine.updateCoordinates(entity);
+                        physicsEngine.setSpeedX(-1, (DynamicEntity) entity);
+                        physicsEngine.setSpeedY(0, (DynamicEntity) entity);
+                        physicsEngine.updateCoordinates((DynamicEntity) entity);
                         break;
                     //flèche de droite
                     case RIGHT:
-                        physicsEngine.setSpeedX(1, entity);
-                        physicsEngine.setSpeedY(0, entity);
-                        physicsEngine.updateCoordinates(entity);
+                        //System.out.println("droite ! ");
+                        physicsEngine.setSpeedX(1, (DynamicEntity) entity);
+                        physicsEngine.setSpeedY(0, (DynamicEntity) entity);
+                        physicsEngine.updateCoordinates((DynamicEntity) entity);
                         break;
                     default : break;
                 }
                 event.consume();
             }
-
         };
     }
+
+    public EventHandler getEventHandler(){ return this.eventHandler;}
+
 }

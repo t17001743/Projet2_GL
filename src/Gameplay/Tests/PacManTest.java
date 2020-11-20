@@ -1,5 +1,6 @@
-package Gameplay;
+package Gameplay.Tests;
 
+import Gameplay.PacMan;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

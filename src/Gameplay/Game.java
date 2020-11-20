@@ -1,57 +1,92 @@
 package Gameplay;
 
 import Engine.*;
+import Engine.Graphics.DrawGraphics2D;
+import Engine.Physics.PhysicsEngine;
+import javafx.application.Application;
+import javafx.scene.paint.Color;
+import javafx.stage.Stage;
+
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.Thread.sleep;
+
+
 /**
  * Boucle principale du jeu
  */
-public class Game extends Thread {
+public class Game extends Application {
 
     private ArrayList<Entity> entities;  //les entités du jeu
-    private DynamicEntity character;  //le personnage (ici Pac-man)
     private PhysicsEngine physicsEngine;  //moteur physique
-    private GraphicsEngine graphicsEngine;  //moteur graphique
+    private DrawGraphics2D graphicsEngine;  //moteur graphique
 
-    public Game(GraphicsEngine graphicsEngine) {
-        this.entities = new ArrayList<Entity>();
-        this.graphicsEngine = graphicsEngine;
+    @Override
+    public void start(Stage primaryStage) {
+        System.out.println("start()");
+
+        /*
+        this.setStage(primaryStage);
+        create2DWindow("Pac-Man", 500, 500);
+         */
+
+        this.physicsEngine = new PhysicsEngine();
+
+        this.graphicsEngine = new DrawGraphics2D(primaryStage);
+        this.graphicsEngine.create2DWindow("Pac-Man", 500, 500);
+
+
+        this.graphicsEngine.drawBackground(Color.BLACK);
+
+        try {
+            this.graphicsEngine.drawEntity(entities.get(0));
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        mainLoop();
     }
 
     /**
      * Initialisation du jeu
      */
-    public void init(){
+    public void init() throws InterruptedException {
+        System.out.println("init()");
+
+        this.entities = new ArrayList<Entity>();
+
         //création des entités dynamiques et de leurs caractéristiques (vitesse, position dans la scène, dimensions)
         List<Double> speed = new ArrayList<>();
         speed.add(0.0);
         speed.add(0.0);
 
         List<Double> position = new ArrayList<>();
-        position.add(600.0);
-        position.add(400.0);
+        position.add(100.0);
+        position.add(100.0);
 
         List<Double> dimensions = new ArrayList<>();
         dimensions.add(50.0);
         dimensions.add(50.0);
 
-        String fileName = "pacman.png";
+        String fileName = "src/Gameplay/Images/pacman.png";
+
         PacMan pacman = new PacMan(speed, position, dimensions, fileName);
-        this.character = pacman;
-        entities.add(pacman);
+        this.entities.add(pacman);
 
         //création des entités statiques
-        StaticEntity staticEntity;
+        //StaticEntity staticEntity;
 
-        //initialisation du moteur physique
-        physicsEngine = new PhysicsEngine();
+        //Controller controller = new Controller((DynamicEntity) entities.get(0), physicsEngine);
+        //this.graphicsEngine.getScene().setOnKeyPressed(controller.getEventHandler());
 
-        //mouvement des entités
-        Controller controller = new Controller(character, physicsEngine);
-        controller.initEventHandler();
+        //while (this.graphicsEngine == null){}
+
+        //mainLoop();
     }
+
 
     /**
      * @return la liste des entités du jeu
@@ -61,49 +96,47 @@ public class Game extends Thread {
     }
 
     /**
-     * @return le personnage
-     */
-    public DynamicEntity getCharacter() {
-        return character;
-    }
-
-    /**
      * Boucle principale
      */
-    public void run(){
-        try {
-            sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+    public void mainLoop(){
 
-        //initialisation du jeu
-        init();
+        System.out.println("RUN()" + graphicsEngine);
 
-        while(true){
-            System.out.println("Initialisation effectuée");
-            //on efface l'ancienne image
-            graphicsEngine.clearFrame();
-            System.out.println("Frame cleared");
-            //on ajoute chaque élément à la scène graphique
-            try {
-                for(int i=0; i < entities.size(); i++){
-                    System.out.println(entities.get(i));
-                    //le moteur affiche la nouvelle image
-                    graphicsEngine.drawImage(entities.get(i));
-                    System.out.println("image affichée");
-                    try {
-                        sleep(100);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+        while (true) {
+
+            graphicsEngine.clearFrame();//on efface l'ancienne image
+
+            graphicsEngine.drawBackground(Color.BLACK);
+
+            for (int i = 0; i < entities.size(); i++) {
+
+                if (entities.get(i).getClass().getSuperclass() == DynamicEntity.class)
+                    physicsEngine.updateCoordinates((DynamicEntity) entities.get(i));
+
+                try {
+                    graphicsEngine.drawEntity(entities.get(i));
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
                 }
-            } catch (FileNotFoundException e) {
+            }
+
+            try {
+                sleep(100);
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
 
-
-
+        //mainLoop();
     }
+
+
+    /** Permise to launch a standalone application.
+     * @param args
+     */
+    public static void main(String[] args){
+        System.out.println("main()");
+        launch(args);
+    }
+
 }
