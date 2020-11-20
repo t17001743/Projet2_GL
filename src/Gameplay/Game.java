@@ -22,8 +22,8 @@ public class Game extends CoreApplication {
     private ArrayList<Entity> entities;  // La liste des entités du jeu, à la fois statique et dynamique
     private PhysicsEngine physicsEngine;  // Moteur physique
     private GraphicsEngine graphicsEngine;  // Moteur graphique
-    private int width;
-    private int height;
+    private Integer width;
+    private Integer height;
 
     /**
      * Méthode nécessaire pour le lancement du programme
@@ -68,14 +68,14 @@ public class Game extends CoreApplication {
         };
 
         // Création des moteurs
-        this.physicsEngine = new PhysicsEngine();
+        this.physicsEngine = new PhysicsEngine(entities, width, height);
         this.graphicsEngine = new GraphicsEngine(primaryStage);
 
         // Création de la fenêtre de jeu
         this.graphicsEngine.create2DWindow("Pac-Man", width, height);
 
         // Instancie la classe des événements sur les entités créés
-        Controller controller = new Controller((DynamicEntity) entities.get(0), physicsEngine);
+        Controller controller = new Controller((DynamicEntity) entities.get(0), physicsEngine, 3);
 
         // Lie les événements clavier à la scène par le biais
         this.graphicsEngine.getScene().setOnKeyPressed(controller.getEventHandler());

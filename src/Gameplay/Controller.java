@@ -14,10 +14,12 @@ public class Controller {
     private DynamicEntity entity;
     private PhysicsEngine physicsEngine;
     private EventHandler<KeyEvent> eventHandler;
+    private Integer speed;
 
-    public Controller(DynamicEntity entity, PhysicsEngine physicsEngine){
+    public Controller(DynamicEntity entity, PhysicsEngine physicsEngine, Integer speed){
         this.entity = entity;
         this.physicsEngine = physicsEngine;
+        this.speed = speed;
         initEventHandler();
     }
 
@@ -32,27 +34,27 @@ public class Controller {
                     //flèche du haut
                     case UP:
                         physicsEngine.setSpeedX(0, (DynamicEntity) entity);
-                        physicsEngine.setSpeedY(-1, (DynamicEntity) entity);
+                        physicsEngine.setSpeedY(-speed, (DynamicEntity) entity);
                         physicsEngine.updateCoordinates((DynamicEntity) entity);
                         break;
 
                     //flèche du bas
                     case DOWN:
                         physicsEngine.setSpeedX(0, (DynamicEntity) entity);
-                        physicsEngine.setSpeedY(1, (DynamicEntity) entity);
+                        physicsEngine.setSpeedY(speed, (DynamicEntity) entity);
                         physicsEngine.updateCoordinates((DynamicEntity) entity);
                         break;
 
                     //flèche de gauche
                     case LEFT:
-                        physicsEngine.setSpeedX(-1, (DynamicEntity) entity);
+                        physicsEngine.setSpeedX(-speed, (DynamicEntity) entity);
                         physicsEngine.setSpeedY(0, (DynamicEntity) entity);
                         physicsEngine.updateCoordinates((DynamicEntity) entity);
                         break;
 
                     //flèche de droite
                     case RIGHT:
-                        physicsEngine.setSpeedX(1, (DynamicEntity) entity);
+                        physicsEngine.setSpeedX(speed, (DynamicEntity) entity);
                         physicsEngine.setSpeedY(0, (DynamicEntity) entity);
                         physicsEngine.updateCoordinates((DynamicEntity) entity);
                         break;
