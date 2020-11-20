@@ -50,7 +50,6 @@ public class Controller {
                         break;
                     //flèche de droite
                     case RIGHT:
-                        //System.out.println("droite ! ");
                         physicsEngine.setSpeedX(1, (DynamicEntity) entity);
                         physicsEngine.setSpeedY(0, (DynamicEntity) entity);
                         physicsEngine.updateCoordinates((DynamicEntity) entity);
