@@ -18,6 +18,8 @@ public class PhysicsEngine {
      */
     public void setSpeedX(double speed, DynamicEntity entity){ entity.setSpeedX(speed); }
 
+
+
     /**
      * Mise à jour de la vitesse sur l'axe des ordonnées
      * @param speed vitesse de l'entité qui se déplace
