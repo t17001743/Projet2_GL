@@ -1,10 +1,9 @@
 package Gameplay;
 
 import Engine.*;
-import Engine.Graphics.DrawGraphics2D;
+import Engine.Graphics.GraphicsEngine;
 import Engine.Physics.PhysicsEngine;
 import javafx.animation.AnimationTimer;
-import javafx.application.Application;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
@@ -12,40 +11,43 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.lang.Thread.sleep;
 
 
 /**
  * Boucle principale du jeu
  */
-public class Game extends Application {
+public class Game extends CoreApplication {
 
     private ArrayList<Entity> entities;  //les entités du jeu
     private PhysicsEngine physicsEngine;  //moteur physique
-    private DrawGraphics2D graphicsEngine;  //moteur graphique
+    private GraphicsEngine graphicsEngine;  //moteur graphique
 
+    /**
+     *
+     * @param primaryStage
+     */
     @Override
     public void start(Stage primaryStage) {
 
         AnimationTimer animationTimer = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                mainLoop();
+                gameLoop();
             }
         };
 
-        System.out.println("start()");
-
         this.physicsEngine = new PhysicsEngine();
-
-        this.graphicsEngine = new DrawGraphics2D(primaryStage);
+        this.graphicsEngine = new GraphicsEngine(primaryStage);
         this.graphicsEngine.create2DWindow("Pac-Man", 500, 500);
 
         animationTimer.start();
     }
 
     /**
-     * Initialisation du jeu
+     * Initialisation du jeu,
+     *
+     * Méthod lancée en deuxième priorité
+     * et avant la méthode start() !
      */
     public void init() throws InterruptedException {
         System.out.println("init()");
@@ -70,17 +72,9 @@ public class Game extends Application {
         PacMan pacman = new PacMan(speed, position, dimensions, fileName);
         this.entities.add(pacman);
 
-        //création des entités statiques
-        //StaticEntity staticEntity;
-
         //Controller controller = new Controller((DynamicEntity) entities.get(0), physicsEngine);
         //this.graphicsEngine.getScene().setOnKeyPressed(controller.getEventHandler());
-
-        //while (this.graphicsEngine == null){}
-
-        //mainLoop();
     }
-
 
     /**
      * @return la liste des entités du jeu
@@ -91,29 +85,29 @@ public class Game extends Application {
 
     /**
      * Boucle principale
+     * Elle s'occupe de gérer l'affichage de manière cohérente :
+     * Elle efface toute la scène (de type Scene)
+     * Elle affiche ensuite chaque élément un à un dans le bon ordre !
+     * Le background avant les entités.
      */
-    public void mainLoop(){
+    public void gameLoop(){
 
-        System.out.println("RUN()" + graphicsEngine);
+        graphicsEngine.clearFrame(); //On efface l'affichage de la fenêtre
 
-        graphicsEngine.clearFrame();//on efface l'ancienne image
-
-        graphicsEngine.drawBackground(Color.BLACK);
+        graphicsEngine.drawBackground(Color.BLACK); //On colorie le background
 
         for (int i = 0; i < entities.size(); i++) {
 
-            if (entities.get(i).getClass().getSuperclass() == DynamicEntity.class)
-                physicsEngine.updateCoordinates((DynamicEntity) entities.get(i));
+            if (entities.get(i).getClass().getSuperclass() == DynamicEntity.class) // Si on a une entité dynamique
+                physicsEngine.updateCoordinates((DynamicEntity) entities.get(i)); // Alors on update ses coordonnées
 
             try {
-                graphicsEngine.drawEntity(entities.get(i));
+                graphicsEngine.drawEntity(entities.get(i)); // On dessine toutes les entités dans le cas où on a bien le chemin de l'image correspondante
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
         }
-
     }
-
 
     /** Permise to launch a standalone application.
      * @param args
