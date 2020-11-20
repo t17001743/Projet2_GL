@@ -41,8 +41,6 @@ public class Game extends CoreApplication {
         // Création des entités dynamiques et de leurs caractéristiques (vitesse, position dans la scène, dimensions)
         createEntity(0.0, 0.0, 100.0, 100.0, 50.0, 50.0, "src/Gameplay/Images/pacman.png", PacMan.class);
 
-        //Controller controller = new Controller((DynamicEntity) entities.get(0), physicsEngine);
-        //this.graphicsEngine.getScene().setOnKeyPressed(controller.getEventHandler());
     }
 
     /**
@@ -52,6 +50,7 @@ public class Game extends CoreApplication {
      */
     @Override
     public void start(Stage primaryStage) {
+
         // La boucle de jeu est appelé environ 60 fois par seconde
         AnimationTimer animationTimer = new AnimationTimer() {
             @Override
@@ -66,6 +65,12 @@ public class Game extends CoreApplication {
 
         // Création de la fenêtre de jeu
         this.graphicsEngine.create2DWindow("Pac-Man", 500, 500);
+
+        // Instancie la classe des événements sur les entités créés
+        Controller controller = new Controller((DynamicEntity) entities.get(0), physicsEngine);
+
+        // Lie les événements clavier à la scène par le biais
+        this.graphicsEngine.getScene().setOnKeyPressed(controller.getEventHandler());
 
         // Lancement de la boucle principale du jeu
         animationTimer.start();
