@@ -29,31 +29,34 @@ public class Controller {
             @Override
             public void handle(KeyEvent event) {
                 switch(event.getCode()){
-
                     //flèche du haut
                     case UP:
-                        physicsEngine.setSpeedX(0, entity);
+                        physicsEngine.setSpeedX(0, (DynamicEntity) entity);
                         physicsEngine.setSpeedY(-1, (DynamicEntity) entity);
                         physicsEngine.updateCoordinates((DynamicEntity) entity);
                         break;
+
                     //flèche du bas
                     case DOWN:
                         physicsEngine.setSpeedX(0, (DynamicEntity) entity);
                         physicsEngine.setSpeedY(1, (DynamicEntity) entity);
                         physicsEngine.updateCoordinates((DynamicEntity) entity);
                         break;
+
                     //flèche de gauche
                     case LEFT:
                         physicsEngine.setSpeedX(-1, (DynamicEntity) entity);
                         physicsEngine.setSpeedY(0, (DynamicEntity) entity);
                         physicsEngine.updateCoordinates((DynamicEntity) entity);
                         break;
+
                     //flèche de droite
                     case RIGHT:
                         physicsEngine.setSpeedX(1, (DynamicEntity) entity);
                         physicsEngine.setSpeedY(0, (DynamicEntity) entity);
                         physicsEngine.updateCoordinates((DynamicEntity) entity);
                         break;
+
                     default : break;
                 }
                 event.consume();
