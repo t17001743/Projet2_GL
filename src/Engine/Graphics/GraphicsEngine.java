@@ -1,34 +1,43 @@
 package Engine.Graphics;
 
 import Engine.Entity;
-import Engine.WindowGraphics;
+import Engine.WindowCreator;
 import javafx.scene.Scene;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 /**
- * Couche graphique du moteur
+ * Classe correspondante au moteur graphique
+ *
+ * Elle a étend le créateur de fenêtre pour permettre l'affichage
+ * Puis s'occupe de modifier cette fenêtre
  */
-public class DrawGraphics2D extends WindowGraphics {
+public class GraphicsEngine extends WindowCreator {
 
-    private Scene scene;  //scène existante utilisée pour l'affichage du jeu
-    private GraphicsContext context;  //pour modifier le canvas
+    private Scene scene;  // Scène existante utilisée pour l'affichage du jeu
+    private GraphicsContext context;  // Pour modifier le canvas
 
-    public DrawGraphics2D(Scene scene, GraphicsContext context, Stage stage){
-        this.scene = scene;
-        this.context = context;
-    }
-
-    public DrawGraphics2D(Stage stage){
+    /**
+     * Le constructeur
+     *
+     * @param stage La stage lié à l'application exécuté
+     */
+    public GraphicsEngine(Stage stage){
         setStage(stage);
     }
 
+    /**
+     * Demande la création de la fenêtre et récupère la scène et le contexte graphique
+     *
+     * @param title Nom de la fenêtre
+     * @param width Longueur de la fenêtre
+     * @param height Hauteur de la fenêtre
+     */
     @Override
     public void create2DWindow(String title, int width, int height) {
         super.create2DWindow(title, width, height);
@@ -39,35 +48,32 @@ public class DrawGraphics2D extends WindowGraphics {
 
     /**
      * Ajout d'une image à la scène
-     * @param entity l'entité à dessiner
-     * @throws FileNotFoundException si le programme ne trouve pas le fichier
+     *
+     * @param entity L'entité à dessiner
+     * @throws FileNotFoundException Si le programme ne trouve pas l'image associée à l'entité
      */
     public void drawEntity(Entity entity) throws FileNotFoundException{
-        System.out.println("drawEntity()");
-
         FileInputStream file = new FileInputStream(entity.getImage());
         Image image = new Image(file);
-
-        System.out.println("\t\t" + context);
 
         context.drawImage(image, entity.getPosition().get(0), entity.getPosition().get(1), 50, 50);
         context.fill();
     }
 
+    /**
+     * Colorie le fond de la scène
+     *
+     * @param color La couleur désirée
+     */
     public void drawBackground(Color color){
-        System.out.println("drawBackground()");
-
         context.setFill(color);
         context.fillRect(0, 0, context.getCanvas().getWidth(), context.getCanvas().getHeight());
     }
 
     /**
-     * Effacement de l'ancienne image
+     * Efface le contenu de la scène
      */
     public void clearFrame(){
-        System.out.println("start clearing" + context);
         context.clearRect(0, 0, this.context.getCanvas().getWidth(), this.context.getCanvas().getHeight());
     }
-
-
 }
