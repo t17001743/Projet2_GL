@@ -29,6 +29,7 @@ public class Controller {
             @Override
             public void handle(KeyEvent event) {
                 switch(event.getCode()){
+
                     //flèche du haut
                     case UP:
                         physicsEngine.setSpeedX(0, entity);
