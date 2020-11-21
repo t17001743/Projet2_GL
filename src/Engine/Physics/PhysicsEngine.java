@@ -58,12 +58,12 @@ public class PhysicsEngine {
      */
     public void updateCoordinates(DynamicEntity entity){
         if(!checkCollision(entity)) {
+            // On efface l'ancienne position
+            deleteOldPosCollisionArray(entity);
+
             List list = new ArrayList<Integer>();
             list.add(entity.getPosition().get(0) + entity.getSpeedX());
             list.add(entity.getPosition().get(1) + entity.getSpeedY());
-
-            // On efface l'ancienne position
-            deleteOldPosCollisionArray(entity);
 
             // On met-à-jour la nouvelle position
             entity.setPosition(list);
@@ -78,15 +78,32 @@ public class PhysicsEngine {
      * @param entity L'entité concernée par la mise-à-jour
      */
     private void updateNewPosCollisionArray(DynamicEntity entity) {
-        int endPositionX = entity.getPosition().get(0);
-        int endPositionY = entity.getPosition().get(1);
+        int startPositionX = entity.getPosition().get(0);
+        int startPositionY = entity.getPosition().get(1);
+        int endPositionX;
+        int endPositionY;
 
-        if(entity.getSpeedX() > 0) endPositionX += entity.getDimensions().get(0);
+        if(entity.getSpeedX() > 0) {
+            startPositionX += entity.getDimensions().get(0);
+            endPositionX = startPositionX + entity.getSpeedX();
 
-        if(entity.getSpeedY() > 0) endPositionY += entity.getDimensions().get(1);
+        }
+        else {
+            startPositionX += entity.getSpeedX();
+            endPositionX = entity.getPosition().get(0);
+        }
 
-        for(int i = endPositionX - entity.getSpeedX(); i < endPositionX; i++) {
-            for(int j = endPositionY - entity.getSpeedY(); j < endPositionY; j++) {
+        if(entity.getSpeedY() > 0) {
+            startPositionY += entity.getDimensions().get(1);
+            endPositionY = startPositionY + entity.getSpeedY();
+        }
+        else {
+            startPositionY += entity.getSpeedY();
+            endPositionY = entity.getPosition().get(1);
+        }
+
+        for(int i = startPositionX; i < endPositionX; i++) {
+            for(int j = startPositionY; j < endPositionY; j++) {
                 collisionArray[i][j] = new Pair(true, entity);
             }
         }
@@ -99,15 +116,25 @@ public class PhysicsEngine {
      * @param entity L'entité concernée par la mise-à-jour
      */
     private void deleteOldPosCollisionArray(DynamicEntity entity) {
-        int positionX = entity.getPosition().get(0);
-        int positionY = entity.getPosition().get(1);
+        int startPositionX = entity.getPosition().get(0);
+        int startPositionY = entity.getPosition().get(1);
+        int endPositionX;
+        int endPositionY;
 
-        if(entity.getSpeedX() < 0) positionX += entity.getDimensions().get(0);
+        if(entity.getSpeedX() > 0) endPositionX = startPositionX + entity.getSpeedX();
+        else {
+            startPositionX += entity.getDimensions().get(0) + entity.getSpeedX();
+            endPositionX = entity.getPosition().get(0) + entity.getDimensions().get(0);
+        }
 
-        if(entity.getSpeedY() < 0) positionY += entity.getDimensions().get(1);
+        if(entity.getSpeedY() > 0) endPositionY = startPositionY + entity.getSpeedY();
+        else {
+            startPositionY += entity.getDimensions().get(1) + entity.getSpeedY();
+            endPositionY = entity.getPosition().get(1) + entity.getDimensions().get(1);
+        }
 
-        for(int i = positionX; i < positionX + entity.getSpeedX(); i++) {
-            for(int j = positionY; j < positionY + entity.getSpeedY(); j++) {
+        for(int i = startPositionX; i < endPositionX; i++) {
+            for(int j = startPositionY; j < endPositionY; j++) {
                 collisionArray[i][j] = new Pair(false, null);
             }
         }
