@@ -54,12 +54,16 @@ public class PhysicsEngine {
 
     /**
      * Mise à jour des coordonnées de l'entité dynamique grâce aux données liées à sa vitesse
+     * et vérifie s'il n'y a pas une collision
+     *
+     * Si une entité ne bouge pas, on ne vérifie rien et on ne met rien à jour
+     *
      * @param entity l'entité dynamique
      */
     public void updateCoordinates(DynamicEntity entity){
-        if(!checkCollision(entity)) {
-            // Si l'entité n'a pas de vitesse, il n'est pas nécessaire de la déplacer
-            if(entity.getSpeedX() != 0 || entity.getSpeedY() != 0) {
+        // Si l'entité n'a pas de vitesse, il n'est pas nécessaire de vérifier quoi que ce soit
+        if(entity.getSpeedX() != 0 || entity.getSpeedY() != 0) {
+            if(!checkCollision(entity)) {
                 // On efface l'ancienne position
                 deleteOldPosCollisionArray(entity);
 
@@ -75,7 +79,7 @@ public class PhysicsEngine {
     }
 
     /**
-     * Définit comme "occupé" les positions qui nétaient précédemment pas occupés par une entité mais qui le seront à la suite de son déplacement
+     * Définit comme "occupé" les positions qui n'étaient précédemment pas occupés par une entité mais qui le seront à la suite de son déplacement
      * On évite ainsi de regarder à nouveau les pixels du tableau qui ne changent pas
      *
      * @param entity L'entité concernée par la mise-à-jour
@@ -83,13 +87,13 @@ public class PhysicsEngine {
     private void updateNewPosCollisionArray(DynamicEntity entity) {
         int startPositionX = entity.getPosition().get(0);
         int startPositionY = entity.getPosition().get(1);
-        int endPositionX = startPositionX + 1;
-        int endPositionY = startPositionY + 1;
+        int endPositionX = startPositionX + entity.getDimensions().get(0);
+        int endPositionY = startPositionY + entity.getDimensions().get(1);
 
         // On définit les extrémités de la boucle en terme de coordonnée x
         if(entity.getSpeedX() > 0) {
             startPositionX += entity.getDimensions().get(0);
-            endPositionX = startPositionX + entity.getSpeedX();
+            endPositionX += entity.getSpeedX();
         }
         else if(entity.getSpeedX() < 0) {
             endPositionX = startPositionX;
@@ -99,22 +103,16 @@ public class PhysicsEngine {
         // On définit les extrémités de la boucle en terme de coordonnée y
         if(entity.getSpeedY() > 0) {
             startPositionY += entity.getDimensions().get(1);
-            endPositionY = startPositionY + entity.getSpeedY();
+            endPositionY += entity.getSpeedY();
         }
         else if(entity.getSpeedY() < 0) {
             endPositionY = startPositionY;
             startPositionY += entity.getSpeedY();
         }
 
-        System.out.println("ADD");
-        System.out.println("startPositionX = " + startPositionX);
-        System.out.println("endPositionX = " + endPositionX);
-        System.out.println("startPositionY = " + startPositionY);
-        System.out.println("endPositionY = " + endPositionY);
-
-        for(int i = startPositionX; i < endPositionX; i++) {
-            for(int j = startPositionY; j < endPositionY; j++) {
-                collisionArray[i][j] = new Pair(true, entity);
+        for(int x = startPositionX; x < endPositionX; x++) {
+            for(int y = startPositionY; y < endPositionY; y++) {
+                collisionArray[x][y] = new Pair(true, entity);
             }
         }
     }
@@ -128,59 +126,74 @@ public class PhysicsEngine {
     private void deleteOldPosCollisionArray(DynamicEntity entity) {
         int startPositionX = entity.getPosition().get(0);
         int startPositionY = entity.getPosition().get(1);
-        int endPositionX = startPositionX + 1;
-        int endPositionY = startPositionY + 1;
+        int endPositionX = startPositionX + entity.getDimensions().get(0);
+        int endPositionY = startPositionY + entity.getDimensions().get(1);
 
         // On définit les extrémités de la boucle en terme de coordonnée x
         if(entity.getSpeedX() > 0) endPositionX = startPositionX + entity.getSpeedX();
-        else if(entity.getSpeedX() < 0) {
-            endPositionX = startPositionX + entity.getDimensions().get(0);
-            startPositionX = endPositionX + entity.getSpeedX();
-        }
+        else if(entity.getSpeedX() < 0) startPositionX = endPositionX + entity.getSpeedX();
 
         // On définit les extrémités de la boucle en terme de coordonnée y
         if(entity.getSpeedY() > 0) endPositionY = startPositionY + entity.getSpeedY();
-        else if(entity.getSpeedY() < 0) {
-            endPositionY = startPositionY + entity.getDimensions().get(1);
-            startPositionY = endPositionY + entity.getSpeedY();
-        }
+        else if(entity.getSpeedY() < 0) startPositionY = endPositionY + entity.getSpeedY();
 
-        System.out.println("DELETE");
-        System.out.println("startPositionX = " + startPositionX);
-        System.out.println("endPositionX = " + endPositionX);
-        System.out.println("startPositionY = " + startPositionY);
-        System.out.println("endPositionY = " + endPositionY);
-
-
-        for(int i = startPositionX; i < endPositionX; i++) {
-            for(int j = startPositionY; j < endPositionY; j++) {
-                collisionArray[i][j] = new Pair(false, null);
+        for(int x = startPositionX; x < endPositionX; x++) {
+            for(int y = startPositionY; y < endPositionY; y++) {
+                collisionArray[x][y] = new Pair(false, null);
             }
         }
     }
 
     /**
-     * Vérifié si le pixel convoité par une entité est déjà occupé
+     * Vérifié si les pixels convoités par une entité sont déjà occupés
      *
      * @param entity L'entité en question
      * @return Vrai si la nouvelle position est occupée, faux sinon
      */
     private boolean checkCollision(DynamicEntity entity) {
-        // On récupère les coordonnées correspondantes à la position que l'on souhaite occuper
-        int newPositionX = entity.getPosition().get(0) + entity.getSpeedX();
-        int newPositionY = entity.getPosition().get(1) + entity.getSpeedY();
+        int startPositionX = entity.getPosition().get(0);
+        int startPositionY = entity.getPosition().get(1);
+        int endPositionX = startPositionX + entity.getDimensions().get(0);
+        int endPositionY = startPositionY + entity.getDimensions().get(1);
 
-        // On ajoute la taille de l'objet en fonction de la direction empruntée
-        if(entity.getSpeedX() > 0) newPositionX += entity.getDimensions().get(0);
-        if(entity.getSpeedY() > 0) newPositionY += entity.getDimensions().get(1);
-
-        // Si le pixel sort de la fenêtre
-        if(newPositionX >= collisionArray.length || newPositionX < 0 || newPositionY >= collisionArray[0].length || newPositionY < 0) {
-            return true;
+        // On définit les extrémités de la boucle en terme de coordonnée x
+        if(entity.getSpeedX() > 0) {
+            startPositionX += entity.getDimensions().get(0);
+            endPositionX += entity.getSpeedX();
+        }
+        else if(entity.getSpeedX() < 0) {
+            endPositionX = startPositionX;
+            startPositionX += entity.getSpeedX();
         }
 
-        // Sinon, regarde si le pixel convoité est déjà occupé
-        return collisionArray[newPositionX][newPositionY].getKey().equals(true);
+        // On définit les extrémités de la boucle en terme de coordonnée y
+        if(entity.getSpeedY() > 0) {
+            startPositionY += entity.getDimensions().get(1);
+            endPositionY += entity.getSpeedY();
+        }
+        else if(entity.getSpeedY() < 0) {
+            endPositionY = startPositionY;
+            startPositionY += entity.getSpeedY();
+        }
+
+        // On parcours chaque pixel concerné par le déplacement
+        for(int x = startPositionX; x < endPositionX; x++) {
+            for(int y = startPositionY; y < endPositionY; y++) {
+                // Si le pixel sort de la fenêtre
+                if(x >= collisionArray.length || x < 0 || y >= collisionArray[0].length || y < 0) {
+                    // On considère une collision avec une bordure
+                    return true;
+                }
+                // Sinon, on regarde si le pixel convoité est déjà occupé par une
+                else if(collisionArray[x][y].getKey().equals(true)){
+                    // On considère une collision avec une entité
+                    return true;
+                }
+            }
+        }
+
+        // Si on sort de la boucle, alors aucune collision n'a eu lieu
+        return false;
     }
 
 }

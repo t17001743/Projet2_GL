@@ -55,7 +55,7 @@ public class GraphicsEngine extends WindowCreator {
         FileInputStream file = new FileInputStream(entity.getImage());
         Image image = new Image(file);
 
-        context.drawImage(image, entity.getPosition().get(0), entity.getPosition().get(1), 50, 50);
+        context.drawImage(image, entity.getPosition().get(0), entity.getPosition().get(1), entity.getDimensions().get(0), entity.getDimensions().get(1));
         context.fill();
     }
 

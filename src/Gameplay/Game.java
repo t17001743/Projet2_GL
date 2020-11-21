@@ -5,7 +5,7 @@ import Engine.Entities.DynamicEntity;
 import Engine.Entities.Entity;
 import Engine.Graphics.GraphicsEngine;
 import Engine.Physics.PhysicsEngine;
-import Gameplay.Entities.PacMan;
+import Gameplay.Entities.*;
 import javafx.animation.AnimationTimer;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -48,6 +48,7 @@ public class Game extends CoreApplication {
 
         // Création des entités dynamiques et de leurs caractéristiques (vitesse, position dans la scène, dimensions)
         createEntity(0, 0, 100, 100, 50, 50, "src/Gameplay/Images/pacman.png", PacMan.class);
+        createEntity(null, null, 250, 250, 10, 50, "src/Gameplay/Images/wall.png", Wall.class);
     }
 
     /**
@@ -139,6 +140,12 @@ public class Game extends CoreApplication {
         if(entityClass == PacMan.class) {
             PacMan pacman = new PacMan(speed, position, dimensions, fileName);
             entities.add(pacman);
+        }
+
+        // Si nous voulons créer un mur
+        if(entityClass == Wall.class) {
+            Wall wall = new Wall(position, dimensions, fileName);
+            entities.add(wall);
         }
     }
 
