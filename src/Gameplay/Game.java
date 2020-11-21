@@ -48,7 +48,6 @@ public class Game extends CoreApplication {
 
         // Création des entités dynamiques et de leurs caractéristiques (vitesse, position dans la scène, dimensions)
         createEntity(0, 0, 100, 100, 50, 50, "src/Gameplay/Images/pacman.png", PacMan.class);
-
     }
 
     /**

@@ -58,16 +58,19 @@ public class PhysicsEngine {
      */
     public void updateCoordinates(DynamicEntity entity){
         if(!checkCollision(entity)) {
-            // On efface l'ancienne position
-            deleteOldPosCollisionArray(entity);
+            // Si l'entité n'a pas de vitesse, il n'est pas nécessaire de la déplacer
+            if(entity.getSpeedX() != 0 || entity.getSpeedY() != 0) {
+                // On efface l'ancienne position
+                deleteOldPosCollisionArray(entity);
 
-            List list = new ArrayList<Integer>();
-            list.add(entity.getPosition().get(0) + entity.getSpeedX());
-            list.add(entity.getPosition().get(1) + entity.getSpeedY());
+                List list = new ArrayList<Integer>();
+                list.add(entity.getPosition().get(0) + entity.getSpeedX());
+                list.add(entity.getPosition().get(1) + entity.getSpeedY());
 
-            // On met-à-jour la nouvelle position
-            entity.setPosition(list);
-            updateNewPosCollisionArray(entity);
+                // On met-à-jour la nouvelle position
+                updateNewPosCollisionArray(entity);
+                entity.setPosition(list);
+            }
         }
     }
 
@@ -80,27 +83,34 @@ public class PhysicsEngine {
     private void updateNewPosCollisionArray(DynamicEntity entity) {
         int startPositionX = entity.getPosition().get(0);
         int startPositionY = entity.getPosition().get(1);
-        int endPositionX;
-        int endPositionY;
+        int endPositionX = startPositionX + 1;
+        int endPositionY = startPositionY + 1;
 
+        // On définit les extrémités de la boucle en terme de coordonnée x
         if(entity.getSpeedX() > 0) {
             startPositionX += entity.getDimensions().get(0);
             endPositionX = startPositionX + entity.getSpeedX();
-
         }
-        else {
+        else if(entity.getSpeedX() < 0) {
+            endPositionX = startPositionX;
             startPositionX += entity.getSpeedX();
-            endPositionX = entity.getPosition().get(0);
         }
 
+        // On définit les extrémités de la boucle en terme de coordonnée y
         if(entity.getSpeedY() > 0) {
             startPositionY += entity.getDimensions().get(1);
             endPositionY = startPositionY + entity.getSpeedY();
         }
-        else {
+        else if(entity.getSpeedY() < 0) {
+            endPositionY = startPositionY;
             startPositionY += entity.getSpeedY();
-            endPositionY = entity.getPosition().get(1);
         }
+
+        System.out.println("ADD");
+        System.out.println("startPositionX = " + startPositionX);
+        System.out.println("endPositionX = " + endPositionX);
+        System.out.println("startPositionY = " + startPositionY);
+        System.out.println("endPositionY = " + endPositionY);
 
         for(int i = startPositionX; i < endPositionX; i++) {
             for(int j = startPositionY; j < endPositionY; j++) {
@@ -118,20 +128,29 @@ public class PhysicsEngine {
     private void deleteOldPosCollisionArray(DynamicEntity entity) {
         int startPositionX = entity.getPosition().get(0);
         int startPositionY = entity.getPosition().get(1);
-        int endPositionX;
-        int endPositionY;
+        int endPositionX = startPositionX + 1;
+        int endPositionY = startPositionY + 1;
 
+        // On définit les extrémités de la boucle en terme de coordonnée x
         if(entity.getSpeedX() > 0) endPositionX = startPositionX + entity.getSpeedX();
-        else {
-            startPositionX += entity.getDimensions().get(0) + entity.getSpeedX();
-            endPositionX = entity.getPosition().get(0) + entity.getDimensions().get(0);
+        else if(entity.getSpeedX() < 0) {
+            endPositionX = startPositionX + entity.getDimensions().get(0);
+            startPositionX = endPositionX + entity.getSpeedX();
         }
 
+        // On définit les extrémités de la boucle en terme de coordonnée y
         if(entity.getSpeedY() > 0) endPositionY = startPositionY + entity.getSpeedY();
-        else {
-            startPositionY += entity.getDimensions().get(1) + entity.getSpeedY();
-            endPositionY = entity.getPosition().get(1) + entity.getDimensions().get(1);
+        else if(entity.getSpeedY() < 0) {
+            endPositionY = startPositionY + entity.getDimensions().get(1);
+            startPositionY = endPositionY + entity.getSpeedY();
         }
+
+        System.out.println("DELETE");
+        System.out.println("startPositionX = " + startPositionX);
+        System.out.println("endPositionX = " + endPositionX);
+        System.out.println("startPositionY = " + startPositionY);
+        System.out.println("endPositionY = " + endPositionY);
+
 
         for(int i = startPositionX; i < endPositionX; i++) {
             for(int j = startPositionY; j < endPositionY; j++) {
@@ -147,19 +166,20 @@ public class PhysicsEngine {
      * @return Vrai si la nouvelle position est occupée, faux sinon
      */
     private boolean checkCollision(DynamicEntity entity) {
+        // On récupère les coordonnées correspondantes à la position que l'on souhaite occuper
         int newPositionX = entity.getPosition().get(0) + entity.getSpeedX();
         int newPositionY = entity.getPosition().get(1) + entity.getSpeedY();
 
+        // On ajoute la taille de l'objet en fonction de la direction empruntée
         if(entity.getSpeedX() > 0) newPositionX += entity.getDimensions().get(0);
-
         if(entity.getSpeedY() > 0) newPositionY += entity.getDimensions().get(1);
 
-        // Si le pixel ne sort pas de la fenêtre
+        // Si le pixel sort de la fenêtre
         if(newPositionX >= collisionArray.length || newPositionX < 0 || newPositionY >= collisionArray[0].length || newPositionY < 0) {
-            // Regarde si le pixel convoité est déjà occupé
             return true;
         }
 
+        // Sinon, regarde si le pixel convoité est déjà occupé
         return collisionArray[newPositionX][newPositionY].getKey().equals(true);
     }
 
