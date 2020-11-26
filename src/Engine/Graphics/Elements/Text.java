@@ -1,4 +1,4 @@
-package Engine.Graphics;
+package Engine.Graphics.Elements;
 
 /**
  * Permet de représenter un texte dans l'affichage graphique

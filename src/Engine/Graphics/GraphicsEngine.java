@@ -1,6 +1,7 @@
 package Engine.Graphics;
 
 import Engine.Entities.Entity;
+import Engine.Graphics.Elements.Text;
 import javafx.scene.Scene;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
