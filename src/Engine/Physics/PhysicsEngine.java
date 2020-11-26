@@ -199,4 +199,17 @@ public class PhysicsEngine {
             }
         }
     }
+
+    public void deleteEntityCollisionArray(Entity entity){
+        int startPositionX = entity.getPosition().get(0);
+        int startPositionY = entity.getPosition().get(1);
+        int endPositionX = startPositionX + entity.getDimensions().get(0);
+        int endPositionY = startPositionY + entity.getDimensions().get(1);
+
+        for(int x = startPositionX; x < endPositionX; x++) {
+            for(int y = startPositionY; y < endPositionY; y++) {
+                collisionArray[x][y] = new Pair(false, null);
+            }
+        }
+    }
 }

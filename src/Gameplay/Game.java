@@ -29,6 +29,7 @@ public class Game extends CoreApplication {
     private PacMan pacman;
     private Integer width;
     private Integer height;
+    private int pacGumCounter;
 
     /**
      * Méthode nécessaire pour le lancement du programme
@@ -97,7 +98,6 @@ public class Game extends CoreApplication {
         graphicsEngine.setColor(Color.WHITE);
         graphicsEngine.setFontAndSize("Arial", 25);
         graphicsEngine.drawText(pacman.getScore());
-
         // Pour chaque entité
         for (int i = 0; i < entities.size(); i++) {
 
@@ -144,15 +144,19 @@ public class Game extends CoreApplication {
                 // On ajuste la vitesse à 0
                 physicsEngine.setSpeedX(0, dynamicEntity);
                 physicsEngine.setSpeedY(0, dynamicEntity);
-                return;
             }
             // Avec un mur
             else if(collidedEntity.getClass().equals(Wall.class)) {
                 // On ajuste la vitesse à 0
                 physicsEngine.setSpeedX(0, dynamicEntity);
                 physicsEngine.setSpeedY(0, dynamicEntity);
+            }
+            //Avec un PacGum
+            else if(collidedEntity.getClass().equals(PacGum.class)){
                 pacman.setScore(pacman.getScore().getScore() + 1);
-                return;
+                entities.remove(collidedEntity);
+                physicsEngine.deleteEntityCollisionArray(collidedEntity);
+                pacGumCounter--;
             }
         }
     }
@@ -193,6 +197,12 @@ public class Game extends CoreApplication {
             Wall wall = new Wall(position, dimensions, fileName);
             entities.add(wall);
         }
+
+        if(entityClass == PacGum.class){
+            PacGum pacGum = new PacGum(position, dimensions, fileName);
+            entities.add(pacGum);
+            pacGumCounter++;
+        }
     }
 
     /**
@@ -231,10 +241,12 @@ public class Game extends CoreApplication {
      * Création d'un niveau et des entités qui le compose
      */
     private void levelCreator(){
+        pacGumCounter = 0;
         // Création de la liste d'entités
         entities = new ArrayList<Entity>();
         // Création des entités dynamiques et de leurs caractéristiques (vitesse, position dans la scène, dimensions)
         createEntity(0, 0, 100, 100, 30, 30, "src/Gameplay/Images/pacman.png", PacMan.class);
+        createEntity(0,0,150,150, 15,15, "src/Gameplay/Images/pacgum.png", PacGum.class);
         // Chargement de la zone de jeu du niveau
         levelLoader("src/Gameplay/Levels/gameZone.txt");
     }
