@@ -1,9 +1,12 @@
 package Engine.Graphics;
 
+/**
+ * Permet de représenter un texte dans l'affichage graphique
+ */
 public class Text {
-    String text;
-    int positionX;
-    int positionY;
+    private String text;
+    private int positionX;
+    private int positionY;
 
     public Text(String text, int positionX, int positionY) {
         this.text = text;

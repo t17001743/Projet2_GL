@@ -4,10 +4,14 @@ import Engine.*;
 import Engine.Entities.DynamicEntity;
 import Engine.Entities.Entity;
 import Engine.Graphics.GraphicsEngine;
+import Engine.Graphics.Text;
 import Engine.Physics.PhysicsEngine;
 import Gameplay.Entities.*;
 import javafx.animation.AnimationTimer;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
@@ -92,6 +96,10 @@ public class Game extends CoreApplication {
 
         graphicsEngine.drawBackground(Color.BLACK); // On colorie le fond
 
+        Text text = new Text("PACMAN 1 2 3 4 5 6 7", 50, 30);
+        graphicsEngine.setColor(Color.WHITE);
+        graphicsEngine.setFontAndSize("Arial", 25);
+
         // Pour chaque entité
         for (int i = 0; i < entities.size(); i++) {
 
@@ -119,6 +127,7 @@ public class Game extends CoreApplication {
             try {
                 // On dessine toutes les entités dans le cas où on a bien le chemin de l'image correspondante
                 graphicsEngine.drawEntity(entities.get(i));
+                graphicsEngine.drawText(text);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
