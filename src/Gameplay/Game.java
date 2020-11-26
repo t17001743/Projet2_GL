@@ -9,9 +9,6 @@ import Engine.Physics.PhysicsEngine;
 import Gameplay.Entities.*;
 import javafx.animation.AnimationTimer;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontPosture;
-import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
