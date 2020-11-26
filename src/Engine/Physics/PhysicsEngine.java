@@ -15,7 +15,9 @@ public class PhysicsEngine {
 
     private Pair<Boolean, Entity>[][] collisionArray;
 
-    public PhysicsEngine(ArrayList<Entity> entities, Integer width, Integer height) {
+    public PhysicsEngine(){}
+
+    public void initializeCollisionArray(ArrayList<Entity> entities, int width, int height){
         collisionArray = new Pair[width][height];
 
         // Initialisation du tableau des collisions comme en étant vide partout
