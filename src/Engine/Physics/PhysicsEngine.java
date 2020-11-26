@@ -15,8 +15,19 @@ public class PhysicsEngine {
 
     private Pair<Boolean, Entity>[][] collisionArray;
 
-    public PhysicsEngine(){}
-
+    /**
+     * Cette méthode permet d'initialiser le tableau des collisions en fonction des entités présente sur la fenêtre de jeu
+     * Elle initialise un tableau nommé collisionArray de taille width x height
+     *
+     * Pour chaque pixel de la fenêtre de jeu, ce tableau attribue une Pair :
+     *  - Si le pixel est vide, cette Pair sera <False, null>
+     *  - Sinon, cette Pair sera <True, Entity>
+     * Le premier élément de la Pair permet donc de savoir si le pixel est occupé et le deuxième par qui
+     *
+     * @param entities La liste des entités présente dans le jeu
+     * @param width La width de la fenêtre de jeu
+     * @param height La height de la fenêtre de jeu
+     */
     public void initializeCollisionArray(ArrayList<Entity> entities, int width, int height){
         collisionArray = new Pair[width][height];
 
@@ -202,6 +213,11 @@ public class PhysicsEngine {
         }
     }
 
+    /**
+     * Cette méthode supprime le statut occupé des pixels d'une entité
+     *
+     * @param entity L'entité dont les pixels sont à marqués comme non-occupés
+     */
     public void deleteEntityCollisionArray(Entity entity){
         int startPositionX = entity.getPosition().get(0);
         int startPositionY = entity.getPosition().get(1);

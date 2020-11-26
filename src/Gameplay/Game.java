@@ -27,11 +27,11 @@ public class Game extends CoreApplication {
     private ArrayList<Entity> entities;  // La liste des entités du jeu, à la fois statique et dynamique
     private PhysicsEngine physicsEngine;  // Moteur physique
     private GraphicsEngine graphicsEngine;  // Moteur graphique
-    private Integer width;
-    private Integer height;
-    private Score score;
-    private PacMan pacman;
-    private int pacGumCounter;
+    private Integer width; // Width de la fenêtre de jeu
+    private Integer height; // Height de la fenêtre de jeu
+    private Score score; // Le score du joueur
+    private PacMan pacman; // Le joueur
+    private int pacGumCounter; // Le compteur de Pac-Gommes
 
     /**
      * Méthode nécessaire pour le lancement du programme
@@ -50,7 +50,6 @@ public class Game extends CoreApplication {
      */
     @Override
     public void start(Stage primaryStage) {
-
         // La boucle de jeu est appelé environ 60 fois par seconde
         AnimationTimer animationTimer = new AnimationTimer() {
             @Override
@@ -58,22 +57,26 @@ public class Game extends CoreApplication {
                 gameLoop();
             }
         };
+
         // Création des moteurs
         this.physicsEngine = new PhysicsEngine();
         this.graphicsEngine = new GraphicsEngine(primaryStage);
+
+        // Création du score et du joueur
         score = new Score(0, 25, 25);
-        createPacman(0,0,120,100,30,30, "src/Gameplay/Images/pacman.png");
+        createEntity(0, 0, 120, 100, 30, 30, "src/Gameplay/Images/pacman.png", PacMan.class);
+
+        // Création du niveau
         levelCreator();
+
         // Création de la fenêtre de jeu
         this.graphicsEngine.create2DWindow("Pac-Man", width, height);
 
         // Instancie la classe des événements sur les entités créés
-        Controller controller = new Controller((DynamicEntity) entities.get(0), physicsEngine, 10);
+        Controller controller = new Controller((DynamicEntity) pacman, physicsEngine, 10);
 
         // Lie les événements clavier à la scène par le biais
         this.graphicsEngine.getScene().setOnKeyPressed(controller.getEventHandler());
-
-
 
         // Lancement de la boucle principale du jeu
         animationTimer.start();
@@ -88,11 +91,16 @@ public class Game extends CoreApplication {
      *  - Elle affiche ensuite chaque élément un à un dans le bon ordre !
      */
     public void gameLoop(){
-        graphicsEngine.clearFrame(); // On efface l'affichage de la fenêtre
-        graphicsEngine.drawBackground(Color.BLACK); // On colorie le fond
+        // On efface l'affichage de la fenêtre
+        graphicsEngine.clearFrame();
+        // On colorie le fond
+        graphicsEngine.drawBackground(Color.BLACK);
+
+        // On définit les propriétés du texte et on affiche le score
         graphicsEngine.setColor(Color.WHITE);
         graphicsEngine.setFontAndSize("Arial", 25);
         graphicsEngine.drawText(score);
+
         // Pour chaque entité
         for (int i = 0; i < entities.size(); i++) {
 
@@ -124,6 +132,8 @@ public class Game extends CoreApplication {
                 e.printStackTrace();
             }
         }
+
+        // Si toutes les Pac-Gommes ont étés récupérés, on créer un autre niveau
         if(pacGumCounter <= 0){
             levelCreator();
         }
@@ -160,6 +170,31 @@ public class Game extends CoreApplication {
     }
 
     /**
+     * Méthode qui s'occupe de d'associer à Pac-Man les paramètres données
+     *
+     * @param speedX Vitesse sur l'axe des x
+     * @param speedY Vitesse sur l'axe des y
+     * @param positionX Position initiale x
+     * @param positionY Position initiale y
+     * @param dimensionX Dimension en x
+     * @param dimensionY Dimension en y
+     */
+    private void setPacman(int speedX, int speedY, int positionX, int positionY, int dimensionX, int dimensionY, String filename){
+        List<Integer> position = new ArrayList<>();
+        position.add(positionX);
+        position.add(positionY);
+
+        List<Integer> dimensions = new ArrayList<>();
+        dimensions.add(dimensionX);
+        dimensions.add(dimensionY);
+
+        pacman.setSpeedX(speedX);
+        pacman.setSpeedY(speedY);
+        pacman.setPosition(position);
+        pacman.setDimensions(dimensions);
+    }
+
+    /**
      * Méthode qui s'occupe de créer une entité en fonction des paramètres données
      * Dans le cas d'une entité statique, la vitesse sur l'axe des x et l'axe des y est définie comme null
      *
@@ -186,12 +221,7 @@ public class Game extends CoreApplication {
 
         // Si nous voulons créer un Pac-Man
         if(entityClass == PacMan.class) {
-            position.set(0,120);
-            position.set(1,100);
-            pacman.setPosition(position);
-            physicsEngine.setSpeedX(0,pacman);
-            physicsEngine.setSpeedY(0,pacman);
-            entities.add(pacman);
+            pacman = new PacMan(speed, position, dimensions, fileName);
         }
 
         // Si nous voulons créer un mur
@@ -217,8 +247,9 @@ public class Game extends CoreApplication {
     }
 
     /**
-     * Cette méthode permnet de charger un niveau
-     * @param filePath Chemin d'accès du fichier txt contenant le niveau
+     * Cette méthode permnet de charger un niveau à partir d'un fichier textuel
+     *
+     * @param filePath Chemin d'accès du fichier .txt contenant le niveau
      */
     private void levelLoader(String filePath){
         try {
@@ -243,32 +274,22 @@ public class Game extends CoreApplication {
      * Création d'un niveau et des entités qui le compose
      */
     private void levelCreator(){
+        // On initialise le compteur de Pac-Gommes
         pacGumCounter = 0;
-        // Création de la liste d'entités
+        // On initialise la liste d'entités
         entities = new ArrayList<Entity>();
-        // Création des entités dynamiques et de leurs caractéristiques (vitesse, position dans la scène, dimensions)
-        createEntity(0,0,120,100,30,30,"", PacMan.class);
+        // On initialise les propriétés de Pac-Man
+        setPacman(0, 0, 120, 100, 30, 30, "src/Gameplay/Images/pacman.png");
+        entities.add(pacman);
+
+        // On créer toutes les autres entités
         createEntity(0,0,150,150, 15,15, "src/Gameplay/Images/pacgum.png", PacGum.class);
-        // Chargement de la zone de jeu du niveau
+
+        // On charge un niveau
         levelLoader("src/Gameplay/Levels/gameZone.txt");
 
+        // On intialise le tableau de collision
         physicsEngine.initializeCollisionArray(entities, width, height);
-    }
-
-    private void createPacman(int speedX, int speedY, int positionX, int positionY, int dimensionX, int dimensionY, String filename){
-        List<Integer> speed = new ArrayList<>();
-        speed.add(speedX);
-        speed.add(speedY);
-
-        List<Integer> position = new ArrayList<>();
-        position.add(positionX);
-        position.add(positionY);
-
-        List<Integer> dimensions = new ArrayList<>();
-        dimensions.add(dimensionX);
-        dimensions.add(dimensionY);
-
-        pacman = new PacMan(speed, position, dimensions, filename);
     }
 
 }

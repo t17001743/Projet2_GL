@@ -2,6 +2,10 @@ package Gameplay.Elements;
 
 import Engine.Graphics.Elements.Text;
 
+/**
+ * Classe utilisé pour le score
+ * Elle étend la classe text pour l'affichage textuel
+ */
 public class Score extends Text {
     int score;
     public Score(int score, int positionX, int positionY) {
