@@ -70,7 +70,7 @@ public class Game extends CoreApplication {
         this.graphicsEngine.create2DWindow("Pac-Man", width, height);
 
         // Instancie la classe des événements sur les entités créés
-        Controller controller = new Controller((DynamicEntity) entities.get(0), physicsEngine, 3);
+        Controller controller = new Controller((DynamicEntity) entities.get(0), physicsEngine, 10);
 
         // Lie les événements clavier à la scène par le biais
         this.graphicsEngine.getScene().setOnKeyPressed(controller.getEventHandler());
