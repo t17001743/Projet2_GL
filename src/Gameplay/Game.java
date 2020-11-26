@@ -11,9 +11,11 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 /**
  * La classe s'occupant de la création du jeu
@@ -41,15 +43,7 @@ public class Game extends CoreApplication {
      * et avant la méthode start() !
      */
     public void init() {
-        width = 500;
-        height = 500;
-
-        // Création de la liste d'entités
-        entities = new ArrayList<Entity>();
-
-        // Création des entités dynamiques et de leurs caractéristiques (vitesse, position dans la scène, dimensions)
-        createEntity(0, 0, 100, 100, 50, 50, "src/Gameplay/Images/pacman.png", PacMan.class);
-        createEntity(null, null, 250, 250, 10, 50, "src/Gameplay/Images/wall.png", Wall.class);
+        levelCreator();
     }
 
     /**
@@ -201,6 +195,41 @@ public class Game extends CoreApplication {
      */
     public ArrayList<Entity> getEntities() {
         return entities;
+    }
+
+    /**
+     * Cette méthode permnet de charger un niveau
+     * @param filePath Chemin d'accès du fichier txt contenant le niveau
+     */
+    private void levelLoader(String filePath){
+        try {
+            Scanner scanner = new Scanner(new File(filePath));
+            width = scanner.nextInt();
+            height = scanner.nextInt();
+
+            String wallFile = scanner.next();
+            while (scanner.hasNextLine()) {
+                int posX, posY, dimX, dimY;
+                posX = scanner.nextInt();
+                posY = scanner.nextInt();
+                dimX = scanner.nextInt();
+                dimY = scanner.nextInt();
+
+                createEntity(null, null, posX, posY, dimX, dimY, wallFile, Wall.class);
+            }
+        }catch(Exception e) {e.printStackTrace();}
+    }
+
+    /**
+     * Création d'un niveau et des entités qui le compose
+     */
+    private void levelCreator(){
+        // Création de la liste d'entités
+        entities = new ArrayList<Entity>();
+        // Création des entités dynamiques et de leurs caractéristiques (vitesse, position dans la scène, dimensions)
+        createEntity(0, 0, 100, 100, 50, 50, "src/Gameplay/Images/pacman.png", PacMan.class);
+        // Chargement de la zone de jeu du niveau
+        levelLoader("src/Gameplay/Levels/gameZone.txt");
     }
 
 }
