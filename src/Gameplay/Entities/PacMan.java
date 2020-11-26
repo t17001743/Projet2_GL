@@ -1,6 +1,7 @@
 package Gameplay.Entities;
 
 import Engine.Entities.DynamicEntity;
+import Engine.Entities.Entity;
 
 import java.util.*;
 

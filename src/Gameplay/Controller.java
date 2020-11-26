@@ -33,30 +33,26 @@ public class Controller {
                 switch(event.getCode()){
                     //flèche du haut
                     case UP:
-                        physicsEngine.setSpeedX(0, (DynamicEntity) entity);
-                        physicsEngine.setSpeedY(-speed, (DynamicEntity) entity);
-                        physicsEngine.updateCoordinates((DynamicEntity) entity);
+                        physicsEngine.setSpeedX(0, entity);
+                        physicsEngine.setSpeedY(-speed, entity);
                         break;
 
                     //flèche du bas
                     case DOWN:
-                        physicsEngine.setSpeedX(0, (DynamicEntity) entity);
-                        physicsEngine.setSpeedY(speed, (DynamicEntity) entity);
-                        physicsEngine.updateCoordinates((DynamicEntity) entity);
+                        physicsEngine.setSpeedX(0, entity);
+                        physicsEngine.setSpeedY(speed, entity);
                         break;
 
                     //flèche de gauche
                     case LEFT:
-                        physicsEngine.setSpeedX(-speed, (DynamicEntity) entity);
-                        physicsEngine.setSpeedY(0, (DynamicEntity) entity);
-                        physicsEngine.updateCoordinates((DynamicEntity) entity);
+                        physicsEngine.setSpeedX(-speed, entity);
+                        physicsEngine.setSpeedY(0, entity);
                         break;
 
                     //flèche de droite
                     case RIGHT:
-                        physicsEngine.setSpeedX(speed, (DynamicEntity) entity);
-                        physicsEngine.setSpeedY(0, (DynamicEntity) entity);
-                        physicsEngine.updateCoordinates((DynamicEntity) entity);
+                        physicsEngine.setSpeedX(speed, entity);
+                        physicsEngine.setSpeedY(0, entity);
                         break;
 
                     default : break;

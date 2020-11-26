@@ -10,24 +10,12 @@ public interface Entity {
     /**
      * @return la position de l'entité (une liste de coordonnées (x,y))
      */
-    public List<Integer> getPosition();
-
-    /**
-     * Changer la position de l'entité
-     * @param position les nouvelles coordonnées de l'entité
-     */
-    public void setPosition(List<Integer> position);
+    List<Integer> getPosition();
 
     /**
      * @return l'image représentant l'entité
      */
-    public String getImage();
-
-    /**
-     * Changer l'image représentant l'entité
-     * @param fileName le nom du fichier contenant l'image (en .png, .jpg)
-     */
-    public void setImage(String fileName);
+    String getImage();
 
     /**
      * @return les dimensions hauteur * largeur de l'image
@@ -35,8 +23,21 @@ public interface Entity {
     public List<Integer> getDimensions();
 
     /**
+     * Changer la position de l'entité
+     * @param position les nouvelles coordonnées de l'entité
+     */
+    void setPosition(List<Integer> position);
+
+
+    /**
+     * Changer l'image représentant l'entité
+     * @param fileName le nom du fichier contenant l'image (en .png, .jpg)
+     */
+    void setImage(String fileName);
+
+    /**
      * Changer les dimensions de l'image
      * @param dimensions les dimensions hauteur * largeur de l'image
      */
-    public void setDimensions(List<Integer> dimensions);
+    void setDimensions(List<Integer> dimensions);
 }

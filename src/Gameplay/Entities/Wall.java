@@ -1,5 +1,6 @@
 package Gameplay.Entities;
 
+import Engine.Entities.Entity;
 import Engine.Entities.StaticEntity;
 
 import java.util.List;

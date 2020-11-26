@@ -9,6 +9,7 @@ import Gameplay.Entities.*;
 import javafx.animation.AnimationTimer;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.util.Pair;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -95,18 +96,62 @@ public class Game extends CoreApplication {
     public void gameLoop(){
         graphicsEngine.clearFrame(); // On efface l'affichage de la fenêtre
 
-        graphicsEngine.drawBackground(Color.BLACK); // On colorie le background
+        graphicsEngine.drawBackground(Color.BLACK); // On colorie le fond
 
-        // On affiche les entités
+        // Pour chaque entité
         for (int i = 0; i < entities.size(); i++) {
 
-            if (entities.get(i).getClass().getSuperclass() == DynamicEntity.class) // Si on a une entité dynamique
-                physicsEngine.updateCoordinates((DynamicEntity) entities.get(i)); // Alors on update ses coordonnées
+            // Pour chaque entité dynamique
+            if (entities.get(i).getClass().getSuperclass() == DynamicEntity.class) {
+                DynamicEntity dynamicEntity = (DynamicEntity) entities.get(i);
+
+                // Si l'entité n'a pas de vitesse, il n'est pas nécessaire de vérifier quoi que ce soit
+                if (physicsEngine.isMoving(dynamicEntity)) {
+                    // On vérifie s'il y a une collsion
+                    Pair<Boolean, Entity> collidedEntity = physicsEngine.checkCollision(dynamicEntity);
+                    // S'il n'y a pas de collisions
+                    if(collidedEntity.getKey().equals(false)) {
+                        // On met à jour ses coordonnées
+                        physicsEngine.updateCoordinates(dynamicEntity);
+                    }
+                    // Sinon
+                    else {
+                        // On gère la collision
+                        collisionHandler(dynamicEntity, collidedEntity.getValue());
+                    }
+                }
+            }
 
             try {
-                graphicsEngine.drawEntity(entities.get(i)); // On dessine toutes les entités dans le cas où on a bien le chemin de l'image correspondante
+                // On dessine toutes les entités dans le cas où on a bien le chemin de l'image correspondante
+                graphicsEngine.drawEntity(entities.get(i));
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * Méthode utilisé pour gérer les collisions
+     *
+     * @param dynamicEntity L'entité responsable de la collision
+     * @param collidedEntity L'entité avec laquelle la collision s'est produite
+     */
+    private void collisionHandler(DynamicEntity dynamicEntity, Entity collidedEntity) {
+        // Si c'est Pac-Man
+        if (dynamicEntity.getClass().equals(PacMan.class)) {
+            if(collidedEntity == null) {
+                // On ajuste la vitesse à 0
+                physicsEngine.setSpeedX(0, dynamicEntity);
+                physicsEngine.setSpeedY(0, dynamicEntity);
+                return;
+            }
+            // Avec un mur
+            else if(collidedEntity.getClass().equals(Wall.class)) {
+                // On ajuste la vitesse à 0
+                physicsEngine.setSpeedX(0, dynamicEntity);
+                physicsEngine.setSpeedY(0, dynamicEntity);
+                return;
             }
         }
     }
