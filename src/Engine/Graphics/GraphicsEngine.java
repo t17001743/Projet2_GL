@@ -90,7 +90,6 @@ public class GraphicsEngine extends WindowCreator {
     public void drawText(Text text){
         context.fillText(text.getText(), text.getPositionX(), text.getPositionY());
     }
-
     /**
      * Sélectionne la couleur des éléments de l'interface
      * @param color la couleur désirée

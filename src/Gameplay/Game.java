@@ -28,6 +28,8 @@ public class Game extends CoreApplication {
     private GraphicsEngine graphicsEngine;  // Moteur graphique
     private Integer width;
     private Integer height;
+    private Text scoreText;
+    private Integer score;
 
     /**
      * Méthode nécessaire pour le lancement du programme
@@ -44,6 +46,7 @@ public class Game extends CoreApplication {
      * et avant la méthode start() !
      */
     public void init() {
+        score = 0;
         levelCreator();
     }
 
@@ -92,8 +95,7 @@ public class Game extends CoreApplication {
         graphicsEngine.clearFrame(); // On efface l'affichage de la fenêtre
 
         graphicsEngine.drawBackground(Color.BLACK); // On colorie le fond
-
-        Text text = new Text("PACMAN 1 2 3 4 5 6 7", 50, 30);
+        scoreText.setText("Score = " + score.toString());
         graphicsEngine.setColor(Color.WHITE);
         graphicsEngine.setFontAndSize("Arial", 25);
 
@@ -124,7 +126,7 @@ public class Game extends CoreApplication {
             try {
                 // On dessine toutes les entités dans le cas où on a bien le chemin de l'image correspondante
                 graphicsEngine.drawEntity(entities.get(i));
-                graphicsEngine.drawText(text);
+                graphicsEngine.drawText(scoreText);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
@@ -151,6 +153,7 @@ public class Game extends CoreApplication {
                 // On ajuste la vitesse à 0
                 physicsEngine.setSpeedX(0, dynamicEntity);
                 physicsEngine.setSpeedY(0, dynamicEntity);
+                score++;
                 return;
             }
         }
@@ -233,9 +236,11 @@ public class Game extends CoreApplication {
         // Création de la liste d'entités
         entities = new ArrayList<Entity>();
         // Création des entités dynamiques et de leurs caractéristiques (vitesse, position dans la scène, dimensions)
-        createEntity(0, 0, 100, 100, 50, 50, "src/Gameplay/Images/pacman.png", PacMan.class);
+        createEntity(0, 0, 100, 100, 30, 30, "src/Gameplay/Images/pacman.png", PacMan.class);
         // Chargement de la zone de jeu du niveau
         levelLoader("src/Gameplay/Levels/gameZone.txt");
+
+        this.scoreText = new Text("Score = " + score.toString(), 20, 25);
     }
 
 }
