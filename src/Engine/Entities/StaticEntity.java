@@ -43,4 +43,5 @@ public abstract class StaticEntity implements Entity {
         this.dimensions = dimensions;
     }
 
+
 }

@@ -3,11 +3,13 @@ package Gameplay;
 import Engine.*;
 import Engine.Entities.DynamicEntity;
 import Engine.Entities.Entity;
-import Engine.Graphics.GraphicsEngine;
 import Engine.Graphics.Elements.Text;
+import Engine.Graphics.GraphicsEngine;
 import Engine.Physics.PhysicsEngine;
+import Gameplay.Elements.Life;
 import Gameplay.Elements.Score;
 import Gameplay.Entities.*;
+import com.sun.javafx.iio.common.RoughScaler;
 import javafx.animation.AnimationTimer;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -17,6 +19,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
 
 /**
@@ -32,6 +35,8 @@ public class Game extends CoreApplication {
     private Score score; // Le score du joueur
     private PacMan pacman; // Le joueur
     private int pacGumCounter; // Le compteur de Pac-Gommes
+    private Life life;
+    private AnimationTimer animationTimer;
 
     /**
      * Méthode nécessaire pour le lancement du programme
@@ -51,26 +56,27 @@ public class Game extends CoreApplication {
     @Override
     public void start(Stage primaryStage) {
         // La boucle de jeu est appelé environ 60 fois par seconde
-        AnimationTimer animationTimer = new AnimationTimer() {
+        animationTimer = new AnimationTimer() {
             @Override
             public void handle(long now) {
                 gameLoop();
             }
         };
 
+        this.entities = new ArrayList<>();
+
         // Création des moteurs
         this.physicsEngine = new PhysicsEngine();
         this.graphicsEngine = new GraphicsEngine(primaryStage);
 
-        // Création du score et du joueur
+        // Création du score, de la vie et du joueur
         score = new Score(0, 25, 25);
-        createEntity(0, 0, 120, 100, 30, 30, "src/Gameplay/Images/pacman.png", PacMan.class);
+        this.life = new Life(1, 50, 25);
+        createEntity(0, 0, 120, 100, 30, 30, "src/Gameplay/Images/pacmans/pacmanD.png", PacMan.class);
 
-        // Création du niveau
-        levelCreator();
+        levelCreator(); // Création du niveau
 
-        // Création de la fenêtre de jeu
-        this.graphicsEngine.create2DWindow("Pac-Man", width, height);
+        this.graphicsEngine.create2DWindow("Pac-Man", width, height); // Création de la fenêtre de jeu
 
         // Instancie la classe des événements sur les entités créés
         Controller controller = new Controller((DynamicEntity) pacman, physicsEngine, 10);
@@ -78,8 +84,9 @@ public class Game extends CoreApplication {
         // Lie les événements clavier à la scène par le biais
         this.graphicsEngine.getScene().setOnKeyPressed(controller.getEventHandler());
 
-        // Lancement de la boucle principale du jeu
-        animationTimer.start();
+        animationTimer.start(); // Lancement de la boucle principale du jeu
+
+        //lifeCounter = new LifeCounter(1, 10, 10);
     }
 
     /**
@@ -119,12 +126,13 @@ public class Game extends CoreApplication {
                     }
                     // Sinon
                     else {
-                        // On gère la collision
+                        // si deux fantomes sont en collision, on ignore
+                        if (collidedEntity.getValue().getClass() == Ghost.class && dynamicEntity.getClass() == Ghost.class) physicsEngine.updateCoordinates(dynamicEntity);
+                        // Sinon on gère la collision
                         collisionHandler(dynamicEntity, collidedEntity.getValue());
                     }
                 }
             }
-
             try {
                 // On dessine toutes les entités dans le cas où on a bien le chemin de l'image correspondante
                 graphicsEngine.drawEntity(entities.get(i));
@@ -132,10 +140,17 @@ public class Game extends CoreApplication {
                 e.printStackTrace();
             }
         }
-
         // Si toutes les Pac-Gommes ont étés récupérés, on créer un autre niveau
-        if(pacGumCounter <= 0){
-            levelCreator();
+        if(pacGumCounter <= 0){ levelCreator(); }
+
+        if (checkGameOver()) {
+            animationTimer.stop();
+
+            this.graphicsEngine.clearFrame();
+            this.graphicsEngine.drawBackground(Color.BLACK);
+
+            this.graphicsEngine.setColor(Color.WHITE);
+            this.graphicsEngine.drawText(new Text(score.getText() + "\nGame Over", width/2 - 50, height/2 - 20));
         }
     }
 
@@ -166,8 +181,52 @@ public class Game extends CoreApplication {
                 physicsEngine.deleteEntityCollisionArray(collidedEntity);
                 pacGumCounter--;
             }
+            // Avec un ghost
+            else if(collidedEntity.getClass().equals(Ghost.class)){
+                decrementLifeCounter();
+            }
+        }
+        // Si c'est un Ghost
+        else if (dynamicEntity.getClass().equals(Ghost.class)){
+            System.out.println("ghost entre en collision");
+            // Avec un mur
+            if (collidedEntity.getClass().equals(Wall.class)){
+                System.out.println("avec un mur");
+                if (new Random().nextInt(2) == 1){ // X axis
+                    System.out.println("X axis");
+                    // il ne faut pas attribuer la même direction qui l'a fait entrer en collision !
+                    if (dynamicEntity.getSpeedX() > 0){
+                        dynamicEntity.setSpeedX(-3);
+                    }
+                    else if (dynamicEntity.getSpeedX() < 0) dynamicEntity.setSpeedX(3);
+                    else {
+                        if (new Random().nextInt(2) == 1) dynamicEntity.setSpeedX(3);
+                        else dynamicEntity.setSpeedX(-3);
+                    }
+                    dynamicEntity.setSpeedY(0);
+                }
+                else{ // Y axis
+                    System.out.println("y axis");
+                    if (dynamicEntity.getSpeedY() > 0){
+                        dynamicEntity.setSpeedY(-3);
+                    }
+                    else if (dynamicEntity.getSpeedY() < 0) dynamicEntity.setSpeedY(3);
+                    else {
+                        if (new Random().nextInt(2) == 1) dynamicEntity.setSpeedY(3);
+                        else dynamicEntity.setSpeedY(-3);
+                    }
+                    dynamicEntity.setSpeedX(0);
+                }
+            }
+            // Avec PacMan
+            else if(collidedEntity.getClass().equals(PacMan.class)){
+                System.out.println("avec pacman");
+                decrementLifeCounter();
+            }
         }
     }
+
+
 
     /**
      * Méthode qui s'occupe de d'associer à Pac-Man les paramètres données
@@ -179,7 +238,7 @@ public class Game extends CoreApplication {
      * @param dimensionX Dimension en x
      * @param dimensionY Dimension en y
      */
-    private void setPacman(int speedX, int speedY, int positionX, int positionY, int dimensionX, int dimensionY, String filename){
+    private void setPacman(int speedX, int speedY, int positionX, int positionY, int dimensionX, int dimensionY){
         List<Integer> position = new ArrayList<>();
         position.add(positionX);
         position.add(positionY);
@@ -221,9 +280,14 @@ public class Game extends CoreApplication {
 
         // Si nous voulons créer un Pac-Man
         if(entityClass == PacMan.class) {
-            pacman = new PacMan(speed, position, dimensions, fileName);
-        }
+            List<String> names = new ArrayList<>();
+            names.add("src/Gameplay/Images/pacmans/pacmanR.png");
+            names.add("src/Gameplay/Images/pacmans/pacmanL.png");
+            names.add("src/Gameplay/Images/pacmans/pacmanD.png");
+            names.add("src/Gameplay/Images/pacmans/pacmanU.png");
 
+            pacman = new PacMan(speed, position, dimensions, names);
+        }
         // Si nous voulons créer un mur
         if(entityClass == Wall.class) {
             Wall wall = new Wall(position, dimensions, fileName);
@@ -235,11 +299,19 @@ public class Game extends CoreApplication {
             entities.add(pacGum);
             pacGumCounter++;
         }
+
+        if(entityClass == Ghost.class){
+            List<String> list = new ArrayList<>();
+            list.add(fileName);
+
+            Ghost ghost = new Ghost(speed, position, dimensions, list);
+
+            entities.add(ghost);
+        }
     }
 
     /**
      * Getter
-     *
      * @return La liste des entités du jeu
      */
     public ArrayList<Entity> getEntities() {
@@ -257,7 +329,14 @@ public class Game extends CoreApplication {
             width = scanner.nextInt();
             height = scanner.nextInt();
 
+            List<Integer> position = new ArrayList<>();
+            position.add(scanner.nextInt());
+            position.add(scanner.nextInt());
+
+            pacman.setPosition(position);
+
             String wallFile = scanner.next();
+
             while (scanner.hasNextLine()) {
                 int posX, posY, dimX, dimY;
                 posX = scanner.nextInt();
@@ -274,22 +353,39 @@ public class Game extends CoreApplication {
      * Création d'un niveau et des entités qui le compose
      */
     private void levelCreator(){
-        // On initialise le compteur de Pac-Gommes
-        pacGumCounter = 0;
-        // On initialise la liste d'entités
-        entities = new ArrayList<Entity>();
+
+        entities = new ArrayList<>();
+
+        pacGumCounter = 0; // On initialise le compteur de Pac-Gommes
+
         // On initialise les propriétés de Pac-Man
-        setPacman(0, 0, 120, 100, 30, 30, "src/Gameplay/Images/pacman.png");
+        setPacman(0, 0, 120, 100, 30, 30);
         entities.add(pacman);
 
-        // On créer toutes les autres entités
-        createEntity(0,0,150,150, 15,15, "src/Gameplay/Images/pacgum.png", PacGum.class);
 
         // On charge un niveau
         levelLoader("src/Gameplay/Levels/gameZone.txt");
 
+        // On créer toutes les autres entités
+
+        createEntity(0,0,150,150, 15,15, "src/Gameplay/Images/pacgum.png", PacGum.class);
+
+        createEntity(0, -3, width/2 - 30, height/2, 30, 30, "src/Gameplay/Images/fantomes/fantomeBleu.jpg", Ghost.class);
+        createEntity(3, 0, width/2 - 30, height/2, 30, 30, "src/Gameplay/Images/fantomes/fantomeOrange.png", Ghost.class);
+        createEntity(0, 3, width/2 - 30, height/2, 30, 30, "src/Gameplay/Images/fantomes/fantomeRose.jpg", Ghost.class);
+        createEntity(-3, 0, width/2 - 30, height/2, 30, 30, "src/Gameplay/Images/fantomes/fantomeRouge.jpg", Ghost.class);
+
+
         // On intialise le tableau de collision
         physicsEngine.initializeCollisionArray(entities, width, height);
     }
+
+    private void incrementLifeCounter(){ life.setLifeCounter(life.getLifeCounter() + 1); }
+
+    private void decrementLifeCounter(){ life.setLifeCounter(life.getLifeCounter() - 1); }
+
+    private boolean checkGameOver(){ return this.life.getLifeCounter() == 0; }
+
+
 
 }

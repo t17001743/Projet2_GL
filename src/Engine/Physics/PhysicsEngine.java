@@ -43,8 +43,14 @@ public class PhysicsEngine {
             int positionX = entity.getPosition().get(0);
             int positionY = entity.getPosition().get(1);
 
+            //if (positionX + entity.getDimensions().get(0) > width || positionY + entity.getDimensions().get(1) > height)
+
+
+
             for(int i = positionX; i < positionX + entity.getDimensions().get(0); i++) {
                 for(int j = positionY; j < positionY + entity.getDimensions().get(1); j++) {
+                    if (j == 500) System.out.println("OUPS : j");
+                    if (i == 500) System.out.println("OUPS : i");
                     collisionArray[i][j] = new Pair(true, entity);
                 }
             }
@@ -230,4 +236,39 @@ public class PhysicsEngine {
             }
         }
     }
+
+    public boolean isEmpty(DynamicEntity entity, int speedX, int speedY){
+        int startPositionX = entity.getPosition().get(0);
+        int startPositionY = entity.getPosition().get(1);
+        int endPositionX = startPositionX + entity.getDimensions().get(0);
+        int endPositionY = startPositionY + entity.getDimensions().get(1);
+
+        // On définit les extrémités de la boucle en terme de coordonnée x
+        if(speedX > 0) {
+            startPositionX += entity.getDimensions().get(0);
+            endPositionX += speedX;
+        }
+        else if(speedX < 0) {
+            endPositionX = startPositionX;
+            startPositionX += speedX;
+        }
+
+        // On définit les extrémités de la boucle en terme de coordonnée y
+        if(speedY > 0) {
+            startPositionY += entity.getDimensions().get(1);
+            endPositionY += speedY;
+        }
+        else if(speedY < 0) {
+            endPositionY = startPositionY;
+            startPositionY += speedY;
+        }
+
+        for(int x = startPositionX; x < endPositionX; x++) {
+            for(int y = startPositionY; y < endPositionY; y++) {
+                if(collisionArray[x][y].getValue() != null) return false;
+            }
+        }
+        return true;
+    }
+
 }

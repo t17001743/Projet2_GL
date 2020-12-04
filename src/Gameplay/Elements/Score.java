@@ -7,7 +7,9 @@ import Engine.Graphics.Elements.Text;
  * Elle étend la classe text pour l'affichage textuel
  */
 public class Score extends Text {
+
     int score;
+
     public Score(int score, int positionX, int positionY) {
         super("Score = " + score, positionX, positionY);
     }

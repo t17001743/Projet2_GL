@@ -11,9 +11,9 @@ public abstract class DynamicEntity implements Entity {
     private List<Integer> speed;  //vitesse de l'entité
     private List<Integer> position;  //coordonnées de l'image
     private List<Integer> dimensions;  //hauteur * largeur de l'image
-    private String fileName;  //nom de l'image à afficher depuis le dossier courant (.jpg, .png)
+    public List<String> fileName;  //nom de l'image à afficher depuis le dossier courant (.jpg, .png)
 
-    public DynamicEntity(List<Integer> speed, List<Integer> position, List<Integer> dimensions, String fileName) {
+    public DynamicEntity(List<Integer> speed, List<Integer> position, List<Integer> dimensions, List<String> fileName) {
         this.speed = speed;
         this.position = position;
         this.dimensions = dimensions;
@@ -80,11 +80,9 @@ public abstract class DynamicEntity implements Entity {
         this.position = position;
     }
 
-    public String getImage(){
-        return this.fileName;
-    }
+    public String getImage(){ return this.fileName.get(0); }
 
-    public void setImage(String fileName){
+    public void setImage(List<String> fileName){
         this.fileName = fileName;
     }
 

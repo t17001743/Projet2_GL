@@ -1,7 +1,7 @@
 500
 500
 225
-320
+235
 src/Gameplay/Images/wall.png
 3
 63
