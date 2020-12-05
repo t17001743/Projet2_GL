@@ -70,7 +70,7 @@ public class Game extends CoreApplication {
         this.graphicsEngine = new GraphicsEngine(primaryStage);
 
         // Création du score, du compteur de vies et du joueur
-        score = new Score(99, 25, 25);
+        score = new Score(0, 25, 25);
         life = new Life(1, 325, 25);
         createEntity(0, 0, 120, 100, 30, 30, "src/Gameplay/Images/pacmans/pacmanD.png", PacMan.class);
 
