@@ -8,7 +8,6 @@ public class Life extends Text {
 
     public Life(int lifeCounter, int positionX, int positionY) {
         super("Lives left = " + lifeCounter, positionX, positionY);
-
         this.lifeCounter = lifeCounter;
     }
 
