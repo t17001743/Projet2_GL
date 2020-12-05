@@ -79,7 +79,7 @@ public class Game extends CoreApplication {
         this.graphicsEngine.create2DWindow("Pac-Man", width, height); // Création de la fenêtre de jeu
 
         // Instancie la classe des événements sur les entités créés
-        Controller controller = new Controller((DynamicEntity) pacman, physicsEngine, 10);
+        Controller controller = new Controller(pacman, physicsEngine, 10);
 
         // Lie les événements clavier à la scène par le biais
         this.graphicsEngine.getScene().setOnKeyPressed(controller.getEventHandler());
@@ -97,7 +97,7 @@ public class Game extends CoreApplication {
      *  - Elle affiche le fond
      *  - Elle affiche ensuite chaque élément un à un dans le bon ordre !
      */
-    public void gameLoop(){
+    private void gameLoop(){
         // On efface l'affichage de la fenêtre
         graphicsEngine.clearFrame();
         // On colorie le fond
@@ -109,25 +109,26 @@ public class Game extends CoreApplication {
         graphicsEngine.drawText(score);
 
         // Pour chaque entité
-        for (int i = 0; i < entities.size(); i++) {
+        for (Entity entity : entities) {
 
             // Pour chaque entité dynamique
-            if (entities.get(i).getClass().getSuperclass() == DynamicEntity.class) {
-                DynamicEntity dynamicEntity = (DynamicEntity) entities.get(i);
+            if (entity.getClass().getSuperclass() == DynamicEntity.class) {
+                DynamicEntity dynamicEntity = (DynamicEntity) entity;
 
                 // Si l'entité n'a pas de vitesse, il n'est pas nécessaire de vérifier quoi que ce soit
                 if (physicsEngine.isMoving(dynamicEntity)) {
                     // On vérifie s'il y a une collsion
                     Pair<Boolean, Entity> collidedEntity = physicsEngine.checkCollision(dynamicEntity);
                     // S'il n'y a pas de collisions
-                    if(collidedEntity.getKey().equals(false)) {
+                    if (collidedEntity.getKey().equals(false)) {
                         // On met à jour ses coordonnées
                         physicsEngine.updateCoordinates(dynamicEntity);
                     }
                     // Sinon
                     else {
                         // si deux fantomes sont en collision, on ignore
-                        if (collidedEntity.getValue().getClass() == Ghost.class && dynamicEntity.getClass() == Ghost.class) physicsEngine.updateCoordinates(dynamicEntity);
+                        if (collidedEntity.getValue().getClass() == Ghost.class && dynamicEntity.getClass() == Ghost.class)
+                            physicsEngine.updateCoordinates(dynamicEntity);
                         // Sinon on gère la collision
                         collisionHandler(dynamicEntity, collidedEntity.getValue());
                     }
@@ -135,7 +136,7 @@ public class Game extends CoreApplication {
             }
             try {
                 // On dessine toutes les entités dans le cas où on a bien le chemin de l'image correspondante
-                graphicsEngine.drawEntity(entities.get(i));
+                graphicsEngine.drawEntity(entity);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
@@ -370,10 +371,10 @@ public class Game extends CoreApplication {
 
         createEntity(0,0,150,150, 15,15, "src/Gameplay/Images/pacgum.png", PacGum.class);
 
-        createEntity(0, -3, width/2 - 30, height/2, 30, 30, "src/Gameplay/Images/fantomes/fantomeBleu.jpg", Ghost.class);
+        createEntity(0, -3, width/2 - 30, height/2, 30, 30, "src/Gameplay/Images/fantomes/fantomeBleu.png", Ghost.class);
         createEntity(3, 0, width/2 - 30, height/2, 30, 30, "src/Gameplay/Images/fantomes/fantomeOrange.png", Ghost.class);
-        createEntity(0, 3, width/2 - 30, height/2, 30, 30, "src/Gameplay/Images/fantomes/fantomeRose.jpg", Ghost.class);
-        createEntity(-3, 0, width/2 - 30, height/2, 30, 30, "src/Gameplay/Images/fantomes/fantomeRouge.jpg", Ghost.class);
+        createEntity(0, 3, width/2 - 30, height/2, 30, 30, "src/Gameplay/Images/fantomes/fantomeRose.png", Ghost.class);
+        createEntity(-3, 0, width/2 - 30, height/2, 30, 30, "src/Gameplay/Images/fantomes/fantomeRouge.png", Ghost.class);
 
 
         // On intialise le tableau de collision
