@@ -127,7 +127,7 @@ public class Game extends CoreApplication {
                     // Sinon
                     else {
                         // si deux fantomes sont en collision, on ignore
-                        if (collidedEntity.getValue().getClass() == Ghost.class && dynamicEntity.getClass() == Ghost.class)
+                        if ((collidedEntity.getValue().getClass() == Ghost.class || collidedEntity.getValue().getClass() == PacGum.class) && dynamicEntity.getClass() == Ghost.class)
                             physicsEngine.updateCoordinates(dynamicEntity);
                         // Sinon on gère la collision
                         collisionHandler(dynamicEntity, collidedEntity.getValue());
@@ -336,17 +336,53 @@ public class Game extends CoreApplication {
 
             pacman.setPosition(position);
 
-            String wallFile = scanner.next();
+            String nameFile = scanner.next();
 
-            while (scanner.hasNextLine()) {
+            int limit= scanner.nextInt();
+
+            for (int i=0; i<limit; i++) { //pr un nb definis de mur
                 int posX, posY, dimX, dimY;
                 posX = scanner.nextInt();
                 posY = scanner.nextInt();
                 dimX = scanner.nextInt();
                 dimY = scanner.nextInt();
 
-                createEntity(null, null, posX, posY, dimX, dimY, wallFile, Wall.class);
+                createEntity(null, null, posX, posY, dimX, dimY, nameFile, Wall.class);
             }
+
+            limit = 4;
+
+            for (int i=0; i<limit; i++){
+                int posX, posY, dimX, dimY, speedX, speedY;
+                nameFile = scanner.next(); //file
+
+                speedX = scanner.nextInt();
+                speedY = scanner.nextInt();
+                posX = scanner.nextInt();
+                posY = scanner.nextInt();
+                dimX = scanner.nextInt();
+                dimY = scanner.nextInt();
+
+                createEntity(speedX, speedY, posX, posY, dimX, dimY, nameFile, Ghost.class);
+            }
+
+            nameFile = scanner.next();
+
+            limit = scanner.nextInt();
+
+            for (int i=0; i<limit; i++){
+                int posX, posY, dimX, dimY;
+                posX = scanner.nextInt();
+                posY = scanner.nextInt();
+                dimX = scanner.nextInt();
+                dimY = scanner.nextInt();
+
+                createEntity(null, null, posX, posY, dimX, dimY, nameFile, PacGum.class);
+
+            }
+
+
+
         }catch(Exception e) {e.printStackTrace();}
     }
 
@@ -369,12 +405,7 @@ public class Game extends CoreApplication {
 
         // On créer toutes les autres entités
 
-        createEntity(0,0,150,150, 15,15, "src/Gameplay/Images/pacgum.png", PacGum.class);
-
-        createEntity(0, -3, width/2 - 30, height/2, 30, 30, "src/Gameplay/Images/fantomes/fantomeBleu.png", Ghost.class);
-        createEntity(3, 0, width/2 - 30, height/2, 30, 30, "src/Gameplay/Images/fantomes/fantomeOrange.png", Ghost.class);
-        createEntity(0, 3, width/2 - 30, height/2, 30, 30, "src/Gameplay/Images/fantomes/fantomeRose.png", Ghost.class);
-        createEntity(-3, 0, width/2 - 30, height/2, 30, 30, "src/Gameplay/Images/fantomes/fantomeRouge.png", Ghost.class);
+        //createEntity(0,0,150,150, 15,15, "src/Gameplay/Images/pacgum.png", PacGum.class);
 
 
         // On intialise le tableau de collision
