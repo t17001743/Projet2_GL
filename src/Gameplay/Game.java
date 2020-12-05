@@ -69,8 +69,8 @@ public class Game extends CoreApplication {
         this.physicsEngine = new PhysicsEngine();
         this.graphicsEngine = new GraphicsEngine(primaryStage);
 
-        // Création du score, de la vie et du joueur
-        score = new Score(0, 25, 25);
+        // Création du score, du compteur de vies et du joueur
+        score = new Score(99, 25, 25);
         life = new Life(1, 325, 25);
         createEntity(0, 0, 120, 100, 30, 30, "src/Gameplay/Images/pacmans/pacmanD.png", PacMan.class);
 
@@ -91,17 +91,25 @@ public class Game extends CoreApplication {
      * Boucle principale
      *
      * Elle s'occupe de gérer l'affichage de manière cohérente :
-     *  - Elle efface toute la scène (de type Scene)
-     *  - Elle affiche le fond
-     *  - Elle affiche ensuite chaque élément un à un dans le bon ordre !
+     *  - 1. Elle efface toute la scène (de type Scene)
+     *  - 2. Elle affiche le fond
+     *  - 3. Elle affiche le score et le nombre de vies
+     *  - 4. Elle affiche chaque entité
+     *
+     * Elle s'occupe également du mouvement de chaque entité dynamique
+     *
+     * Enfin, elle gère la fin de niveau ou de jeu de la manière suivante :
+     *  - 5. Si le nombre de Pac-Gommes est à 0, le niveau est terminé
+     *  - 6. Si le nombre de vies est à 0, la partie est terminée
      */
     private void gameLoop(){
-        // On efface l'affichage de la fenêtre
+        // 1. On efface toute la scene
         graphicsEngine.clearFrame();
-        // On colorie le fond
+
+        // 2. On affiche le fond
         graphicsEngine.drawBackground(Color.BLACK);
 
-        // On définit les propriétés du texte et on affiche le score
+        // 3. On définit les propriétés du texte et on affiche le score et le nombre de vies
         graphicsEngine.setColor(Color.WHITE);
         graphicsEngine.setFontAndSize("Arial", 25);
         graphicsEngine.drawText(score);
@@ -131,16 +139,17 @@ public class Game extends CoreApplication {
                 }
             }
             try {
-                // On dessine toutes les entités dans le cas où on a bien le chemin de l'image correspondante
+                // 4. On affiche chaque entité
                 graphicsEngine.drawEntity(entities.get(i));
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
         }
 
-        // Si toutes les Pac-Gommes ont étés récupérés, on créer un autre niveau
+        // 5. Si le nombre de Pac-Gommes est à 0, le niveau est terminé
         if(pacGumCounter <= 0){ levelCreator(); }
 
+        // 6. Si le nombre de vies est à 0, la partie est terminée
         if(checkGameOver()) {
             animationTimer.stop();
 
@@ -166,7 +175,7 @@ public class Game extends CoreApplication {
                 physicsEngine.setSpeedX(0, dynamicEntity);
                 physicsEngine.setSpeedY(0, dynamicEntity);
             }
-            // Avec un mur
+            // Avec un Wall
             else if(collidedEntity.getClass().equals(Wall.class)) {
                 // On ajuste la vitesse à 0
                 physicsEngine.setSpeedX(0, dynamicEntity);
@@ -174,7 +183,7 @@ public class Game extends CoreApplication {
             }
             //Avec un PacGum
             else if(collidedEntity.getClass().equals(PacGum.class)){
-                score.setScore(score.getScore() +1);
+                incrementScore(1);
                 entities.remove(collidedEntity);
                 physicsEngine.deleteEntityCollisionArray(collidedEntity);
                 pacGumCounter--;
@@ -184,16 +193,30 @@ public class Game extends CoreApplication {
                     incrementLifeCounter();
                 }
             }
-            // Avec un ghost
+            //Avec un Fruit
+            else if(collidedEntity.getClass().equals(Fruit.class)){
+                int previousScore = score.getScore();
+
+                incrementScore(50);
+                entities.remove(collidedEntity);
+                physicsEngine.deleteEntityCollisionArray(collidedEntity);
+
+                // Si le score a changé de centaine, on ajoute une vie
+                if(score.getScore() != 0 && score.getScore() % 100 < previousScore % 100) {
+                    incrementLifeCounter();
+                }
+            }
+            // Avec un Ghost
             else if(collidedEntity.getClass().equals(Ghost.class)){
                 decrementLifeCounter();
                 levelCreator();
             }
         }
+
         // Si c'est un Ghost
         else if (dynamicEntity.getClass().equals(Ghost.class)){
-            // Avec un mur
-            if (collidedEntity.getClass().equals(Wall.class) || collidedEntity.getClass().equals(Ghost.class) || collidedEntity.getClass().equals(PacGum.class)  ){
+            // Avec un Wall
+            if (collidedEntity.getClass().equals(Wall.class) || collidedEntity.getClass().equals(Ghost.class) || collidedEntity.getClass().equals(PacGum.class) || collidedEntity.getClass().equals(Fruit.class)){
                 if (new Random().nextInt(2) == 1){ // X axis
                     // il ne faut pas attribuer la même direction qui l'a fait entrer en collision !
                     if (dynamicEntity.getSpeedX() > 0){
@@ -278,7 +301,7 @@ public class Game extends CoreApplication {
         dimensions.add(dimensionX);
         dimensions.add(dimensionY);
 
-        // Si nous voulons créer un Pac-Man
+        // Si nous voulons créer un PacMan
         if(entityClass == PacMan.class) {
             List<String> names = new ArrayList<>();
             names.add("src/Gameplay/Images/pacmans/pacmanR.png");
@@ -288,18 +311,27 @@ public class Game extends CoreApplication {
 
             pacman = new PacMan(speed, position, dimensions, names);
         }
-        // Si nous voulons créer un mur
+
+        // Si nous voulons créer un Wall
         if(entityClass == Wall.class) {
             Wall wall = new Wall(position, dimensions, fileName);
             entities.add(wall);
         }
 
+        // Si nous voulons créer un PacGum
         if(entityClass == PacGum.class){
             PacGum pacGum = new PacGum(position, dimensions, fileName);
             entities.add(pacGum);
             pacGumCounter++;
         }
 
+        // Si nous voulons créer un Fruit
+        if(entityClass == Fruit.class){
+            Fruit fruit = new Fruit(position, dimensions, fileName);
+            entities.add(fruit);
+        }
+
+        // Si nous voulons créer un Ghost
         if(entityClass == Ghost.class){
             List<String> list = new ArrayList<>();
             list.add(fileName);
@@ -379,7 +411,19 @@ public class Game extends CoreApplication {
                 createEntity(null, null, posX, posY, dimX, dimY, nameFile, PacGum.class);
             }
 
+            nameFile = scanner.next();
 
+            limit = scanner.nextInt();
+
+            for (int i=0; i<limit; i++){
+                int posX, posY, dimX, dimY;
+                posX = scanner.nextInt();
+                posY = scanner.nextInt();
+                dimX = scanner.nextInt();
+                dimY = scanner.nextInt();
+
+                createEntity(null, null, posX, posY, dimX, dimY, nameFile, Fruit.class);
+            }
 
         }catch(Exception e) {e.printStackTrace();}
     }
@@ -403,6 +447,8 @@ public class Game extends CoreApplication {
         // On intialise le tableau de collision
         physicsEngine.initializeCollisionArray(entities, width, height);
     }
+
+    private void incrementScore(int value) { score.setScore(score.getScore() + value); }
 
     private void incrementLifeCounter(){ life.setLifeCounter(life.getLifeCounter() + 1); }
 
