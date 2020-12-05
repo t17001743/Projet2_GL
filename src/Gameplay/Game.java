@@ -85,8 +85,6 @@ public class Game extends CoreApplication {
         this.graphicsEngine.getScene().setOnKeyPressed(controller.getEventHandler());
 
         animationTimer.start(); // Lancement de la boucle principale du jeu
-
-        //lifeCounter = new LifeCounter(1, 10, 10);
     }
 
     /**
@@ -139,10 +137,11 @@ public class Game extends CoreApplication {
                 e.printStackTrace();
             }
         }
+
         // Si toutes les Pac-Gommes ont étés récupérés, on créer un autre niveau
         if(pacGumCounter <= 0){ levelCreator(); }
 
-        if (checkGameOver()) {
+        if(checkGameOver()) {
             animationTimer.stop();
 
             this.graphicsEngine.clearFrame();
@@ -179,10 +178,16 @@ public class Game extends CoreApplication {
                 entities.remove(collidedEntity);
                 physicsEngine.deleteEntityCollisionArray(collidedEntity);
                 pacGumCounter--;
+
+                // Si le score est différent de 0 et est un multiple de 100, on ajoute une vie
+                if(score.getScore() % 100 == 0 && score.getScore() != 0) {
+                    incrementLifeCounter();
+                }
             }
             // Avec un ghost
             else if(collidedEntity.getClass().equals(Ghost.class)){
                 decrementLifeCounter();
+                levelCreator();
             }
         }
         // Si c'est un Ghost
@@ -216,6 +221,7 @@ public class Game extends CoreApplication {
             // Avec PacMan
             else if(collidedEntity.getClass().equals(PacMan.class)){
                 decrementLifeCounter();
+                levelCreator();
             }
         }
     }
@@ -382,7 +388,7 @@ public class Game extends CoreApplication {
      * Création d'un niveau et des entités qui le compose
      */
     private void levelCreator(){
-
+        // On créer la liste d'entités
         entities = new ArrayList<>();
 
         pacGumCounter = 0; // On initialise le compteur de Pac-Gommes
@@ -402,8 +408,5 @@ public class Game extends CoreApplication {
 
     private void decrementLifeCounter(){ life.setLifeCounter(life.getLifeCounter() - 1); }
 
-    private boolean checkGameOver(){ return this.life.getLifeCounter() == 0; }
-
-
-
+    private boolean checkGameOver(){ return life.getLifeCounter() == 0; }
 }

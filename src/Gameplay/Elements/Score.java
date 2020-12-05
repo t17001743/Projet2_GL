@@ -12,6 +12,7 @@ public class Score extends Text {
 
     public Score(int score, int positionX, int positionY) {
         super("Score = " + score, positionX, positionY);
+        this.score = score;
     }
 
     public void setScore(int score) {
