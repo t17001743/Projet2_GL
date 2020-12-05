@@ -7,7 +7,7 @@ public class Life extends Text {
     int lifeCounter;
 
     public Life(int lifeCounter, int positionX, int positionY) {
-        super(String.valueOf(lifeCounter), positionX, positionY);
+        super("Lives left = " + lifeCounter, positionX, positionY);
 
         this.lifeCounter = lifeCounter;
     }
@@ -16,7 +16,7 @@ public class Life extends Text {
 
     public void setLifeCounter(int lifeCounter){
         this.lifeCounter = lifeCounter;
-        super.setText(String.valueOf(lifeCounter));
+        this.setText("Lives left = " + lifeCounter);
     }
 
 }

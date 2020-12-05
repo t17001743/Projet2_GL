@@ -71,7 +71,7 @@ public class Game extends CoreApplication {
 
         // Création du score, de la vie et du joueur
         score = new Score(0, 25, 25);
-        this.life = new Life(1, 50, 25);
+        life = new Life(1, 325, 25);
         createEntity(0, 0, 120, 100, 30, 30, "src/Gameplay/Images/pacmans/pacmanD.png", PacMan.class);
 
         levelCreator(); // Création du niveau
@@ -107,6 +107,7 @@ public class Game extends CoreApplication {
         graphicsEngine.setColor(Color.WHITE);
         graphicsEngine.setFontAndSize("Arial", 25);
         graphicsEngine.drawText(score);
+        graphicsEngine.drawText(life);
 
         // Pour chaque entité
         for (int i = 0; i < entities.size(); i++) {
