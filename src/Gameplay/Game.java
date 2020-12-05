@@ -109,11 +109,11 @@ public class Game extends CoreApplication {
         graphicsEngine.drawText(score);
 
         // Pour chaque entité
-        for (Entity entity : entities) {
+        for (int i = 0; i < entities.size(); i++) {
 
             // Pour chaque entité dynamique
-            if (entity.getClass().getSuperclass() == DynamicEntity.class) {
-                DynamicEntity dynamicEntity = (DynamicEntity) entity;
+            if (entities.get(i).getClass().getSuperclass() == DynamicEntity.class) {
+                DynamicEntity dynamicEntity = (DynamicEntity) entities.get(i);
 
                 // Si l'entité n'a pas de vitesse, il n'est pas nécessaire de vérifier quoi que ce soit
                 if (physicsEngine.isMoving(dynamicEntity)) {
@@ -126,9 +126,6 @@ public class Game extends CoreApplication {
                     }
                     // Sinon
                     else {
-                        // si deux fantomes sont en collision, on ignore
-                        if ((collidedEntity.getValue().getClass() == Ghost.class || collidedEntity.getValue().getClass() == PacGum.class) && dynamicEntity.getClass() == Ghost.class)
-                            physicsEngine.updateCoordinates(dynamicEntity);
                         // Sinon on gère la collision
                         collisionHandler(dynamicEntity, collidedEntity.getValue());
                     }
@@ -136,7 +133,7 @@ public class Game extends CoreApplication {
             }
             try {
                 // On dessine toutes les entités dans le cas où on a bien le chemin de l'image correspondante
-                graphicsEngine.drawEntity(entity);
+                graphicsEngine.drawEntity(entities.get(i));
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
@@ -189,12 +186,20 @@ public class Game extends CoreApplication {
         }
         // Si c'est un Ghost
         else if (dynamicEntity.getClass().equals(Ghost.class)){
-            System.out.println("ghost entre en collision");
+            System.out.println("GHOST" + dynamicEntity.getImage());
             // Avec un mur
-            if (collidedEntity.getClass().equals(Wall.class)){
-                System.out.println("avec un mur");
+            if (collidedEntity.getClass().equals(Wall.class) || collidedEntity.getClass().equals(Ghost.class) || collidedEntity.getClass().equals(PacGum.class)  ){
+                if(collidedEntity.getClass().equals(Wall.class)) {
+                    System.out.println("MUR");
+                }
+                if(collidedEntity.getClass().equals(Ghost.class)) {
+                    System.out.println("GHOST");
+                }
+                if(collidedEntity.getClass().equals(PacGum.class)) {
+                    System.out.println("PACGUM");
+                }
                 if (new Random().nextInt(2) == 1){ // X axis
-                    System.out.println("X axis");
+                    System.out.println("X");
                     // il ne faut pas attribuer la même direction qui l'a fait entrer en collision !
                     if (dynamicEntity.getSpeedX() > 0){
                         dynamicEntity.setSpeedX(-3);
@@ -207,7 +212,7 @@ public class Game extends CoreApplication {
                     dynamicEntity.setSpeedY(0);
                 }
                 else{ // Y axis
-                    System.out.println("y axis");
+                    System.out.println("Y");
                     if (dynamicEntity.getSpeedY() > 0){
                         dynamicEntity.setSpeedY(-3);
                     }
@@ -221,7 +226,7 @@ public class Game extends CoreApplication {
             }
             // Avec PacMan
             else if(collidedEntity.getClass().equals(PacMan.class)){
-                System.out.println("avec pacman");
+                System.out.println("PACMAN");
                 decrementLifeCounter();
             }
         }
@@ -350,7 +355,7 @@ public class Game extends CoreApplication {
                 createEntity(null, null, posX, posY, dimX, dimY, nameFile, Wall.class);
             }
 
-            limit = 4;
+            limit = scanner.nextInt();
 
             for (int i=0; i<limit; i++){
                 int posX, posY, dimX, dimY, speedX, speedY;
