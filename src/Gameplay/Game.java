@@ -186,20 +186,9 @@ public class Game extends CoreApplication {
         }
         // Si c'est un Ghost
         else if (dynamicEntity.getClass().equals(Ghost.class)){
-            System.out.println("GHOST" + dynamicEntity.getImage());
             // Avec un mur
             if (collidedEntity.getClass().equals(Wall.class) || collidedEntity.getClass().equals(Ghost.class) || collidedEntity.getClass().equals(PacGum.class)  ){
-                if(collidedEntity.getClass().equals(Wall.class)) {
-                    System.out.println("MUR");
-                }
-                if(collidedEntity.getClass().equals(Ghost.class)) {
-                    System.out.println("GHOST");
-                }
-                if(collidedEntity.getClass().equals(PacGum.class)) {
-                    System.out.println("PACGUM");
-                }
                 if (new Random().nextInt(2) == 1){ // X axis
-                    System.out.println("X");
                     // il ne faut pas attribuer la même direction qui l'a fait entrer en collision !
                     if (dynamicEntity.getSpeedX() > 0){
                         dynamicEntity.setSpeedX(-3);
@@ -212,7 +201,6 @@ public class Game extends CoreApplication {
                     dynamicEntity.setSpeedY(0);
                 }
                 else{ // Y axis
-                    System.out.println("Y");
                     if (dynamicEntity.getSpeedY() > 0){
                         dynamicEntity.setSpeedY(-3);
                     }
@@ -226,7 +214,6 @@ public class Game extends CoreApplication {
             }
             // Avec PacMan
             else if(collidedEntity.getClass().equals(PacMan.class)){
-                System.out.println("PACMAN");
                 decrementLifeCounter();
             }
         }
@@ -383,7 +370,6 @@ public class Game extends CoreApplication {
                 dimY = scanner.nextInt();
 
                 createEntity(null, null, posX, posY, dimX, dimY, nameFile, PacGum.class);
-
             }
 
 
@@ -404,14 +390,8 @@ public class Game extends CoreApplication {
         setPacman(0, 0, 120, 100, 30, 30);
         entities.add(pacman);
 
-
         // On charge un niveau
         levelLoader("src/Gameplay/Levels/gameZone.txt");
-
-        // On créer toutes les autres entités
-
-        //createEntity(0,0,150,150, 15,15, "src/Gameplay/Images/pacgum.png", PacGum.class);
-
 
         // On intialise le tableau de collision
         physicsEngine.initializeCollisionArray(entities, width, height);
