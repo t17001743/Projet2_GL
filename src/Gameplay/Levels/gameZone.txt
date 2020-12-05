@@ -527,7 +527,7 @@ src/Gameplay/Images/fantomes/fantomeOrange.png
 250
 30
 30
-src/Gameplay/Images/fantomes/fantomeRose.png
+src/Gameplay/Images/fantomes/fantomeVert.png
 3
 0
 190
